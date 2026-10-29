@@ -1,0 +1,3570 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎓 Simulador de Sistemas Digitais v5.1 · Lógica + Simulação Automática e Manual</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --bg: #0b0f17;
+      --bg-elev: #0e1422;
+      --panel: #121826;
+      --panel-2: #1a2235;
+      --panel-3: #26304a;
+      --border: #232c44;
+      --border-hard: #324066;
+      --txt: #e6ecff;
+      --txt-2: #b8c4d8;
+      --txt-3: #8b96b8;
+      --txt-4: #5a6683;
+      --accent: #e30613;
+      --accent-2: #ff4757;
+      --ok: #00d68f;
+      --ok-2: #4ade80;
+      --warn: #ffb020;
+      --warn-2: #ffb74d;
+      --err: #ff4d4f;
+      --err-2: #ff6b6b;
+      --info: #3aa0ff;
+      --info-2: #63b3ed;
+      --purple: #b794f4;
+      --pink: #f687b3;
+      --topbar-h: 62px
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    body {
+      background: radial-gradient(1400px 700px at 20% -10%, #16203a 0%, var(--bg) 65%);
+      color: var(--txt);
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column
+    }
+
+    ::selection {
+      background: rgba(227, 6, 19, .35);
+      color: #fff
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--panel-3);
+      border-radius: 4px
+    }
+
+    code,
+    pre,
+    .mono {
+      font-family: 'JetBrains Mono', monospace
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      font-size: .72rem;
+      font-weight: 500;
+      color: var(--txt-2);
+      white-space: nowrap
+    }
+
+    .pill .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--txt-3);
+      flex-shrink: 0
+    }
+
+    .pill .dot.ok {
+      background: var(--ok);
+      box-shadow: 0 0 8px var(--ok);
+      animation: pulse 2s infinite
+    }
+
+    .pill .dot.info {
+      background: var(--info);
+      box-shadow: 0 0 8px var(--info)
+    }
+
+    .pill .dot.warn {
+      background: var(--warn);
+      box-shadow: 0 0 8px var(--warn)
+    }
+
+    .pill .dot.err {
+      background: var(--err);
+      box-shadow: 0 0 8px var(--err);
+      animation: pulse 1s infinite
+    }
+
+    @keyframes pulse {
+      50% {
+        opacity: .4
+      }
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--txt-3);
+      padding: 10px 14px;
+      border-radius: 8px 8px 0 0;
+      cursor: pointer;
+      font-size: .82rem;
+      font-weight: 500;
+      transition: all .15s ease;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap
+    }
+
+    .tab-btn:hover {
+      color: var(--txt);
+      background: var(--panel-2)
+    }
+
+    .tab-btn.active {
+      color: var(--accent-2);
+      border-bottom-color: var(--accent);
+      background: var(--panel-2);
+      font-weight: 600
+    }
+
+    .card {
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      position: relative
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--accent);
+      border-radius: 3px 0 0 3px
+    }
+
+    .card.ok::before {
+      background: var(--ok)
+    }
+
+    .card.info::before {
+      background: var(--info)
+    }
+
+    .card.purple::before {
+      background: var(--purple)
+    }
+
+    .card.warn::before {
+      background: var(--warn)
+    }
+
+    .card.err::before {
+      background: var(--err)
+    }
+
+    .card h3 {
+      font-size: .76rem;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--accent-2);
+      margin-bottom: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .card.ok h3 {
+      color: var(--ok)
+    }
+
+    .card.info h3 {
+      color: var(--info)
+    }
+
+    .card.purple h3 {
+      color: var(--purple)
+    }
+
+    .card.warn h3 {
+      color: var(--warn)
+    }
+
+    .card.err h3 {
+      color: var(--err)
+    }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: var(--panel-3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all .15s ease
+    }
+
+    .input-row:hover {
+      border-color: var(--border-hard)
+    }
+
+    .input-row.corrupted {
+      border-color: var(--err);
+      background: rgba(255, 77, 79, .1);
+      animation: shake .3s ease
+    }
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0)
+      }
+
+      25% {
+        transform: translateX(-3px)
+      }
+
+      75% {
+        transform: translateX(3px)
+      }
+    }
+
+    .input-row .bit {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: var(--txt-3);
+      flex-shrink: 0
+    }
+
+    .input-row.active .bit {
+      background: rgba(0, 214, 143, .2);
+      border-color: var(--ok);
+      color: var(--ok-2);
+      box-shadow: 0 0 10px rgba(0, 214, 143, .3)
+    }
+
+    .input-row.corrupted .bit {
+      background: rgba(255, 77, 79, .2);
+      border-color: var(--err);
+      color: var(--err-2)
+    }
+
+    .toggle {
+      width: 40px;
+      height: 22px;
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      position: relative;
+      transition: all .15s ease;
+      flex-shrink: 0
+    }
+
+    .toggle::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      background: var(--txt-3);
+      border-radius: 50%;
+      transition: all .15s ease
+    }
+
+    .input-row.active .toggle {
+      background: rgba(0, 214, 143, .25);
+      border-color: var(--ok)
+    }
+
+    .input-row.active .toggle::after {
+      left: 20px;
+      background: var(--ok-2);
+      box-shadow: 0 0 8px var(--ok)
+    }
+
+    .truth-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .78rem
+    }
+
+    .truth-table th,
+    .truth-table td {
+      padding: 6px 10px;
+      text-align: center;
+      border: 1px solid var(--border)
+    }
+
+    .truth-table th {
+      background: var(--panel-3);
+      color: var(--info-2);
+      font-weight: 700
+    }
+
+    .truth-table tr.active-row {
+      background: rgba(58, 160, 255, .18) !important;
+      border-left: 3px solid var(--info);
+      font-weight: 700
+    }
+
+    .truth-table tr.active-row td {
+      color: #fff
+    }
+
+    .kmap-grid {
+      display: grid;
+      gap: 2px;
+      background: var(--border);
+      border: 1px solid var(--border-hard);
+      border-radius: 8px;
+      overflow: hidden;
+      font-family: 'JetBrains Mono', monospace
+    }
+
+    .kmap-cell {
+      background: var(--panel);
+      padding: 10px 6px;
+      text-align: center;
+      font-size: .95rem;
+      font-weight: 700;
+      position: relative;
+      transition: all .2s ease
+    }
+
+    .kmap-cell.one {
+      background: rgba(0, 214, 143, .15);
+      color: var(--ok-2)
+    }
+
+    .kmap-cell.active-cell {
+      border: 2px solid var(--warn);
+      box-shadow: inset 0 0 10px rgba(255, 176, 32, .4)
+    }
+
+    .kmap-header {
+      background: var(--panel-3);
+      color: var(--txt-2);
+      font-size: .7rem;
+      font-weight: 700;
+      padding: 5px;
+      text-align: center
+    }
+
+    .gate-svg {
+      width: 100%;
+      height: 130px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px
+    }
+
+    .led {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #2a3448, #131a28);
+      border: 2px solid var(--border-hard);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--txt-4);
+      margin: 0 auto 6px;
+      transition: all .2s
+    }
+
+    .led.on.ok {
+      background: radial-gradient(circle at 30% 30%, #6affb8, #009e69);
+      border-color: var(--ok-2);
+      color: #fff;
+      box-shadow: 0 0 20px var(--ok)
+    }
+
+    .led.on.err {
+      background: radial-gradient(circle at 30% 30%, #ff8a8a, #c81e1e);
+      border-color: var(--err-2);
+      color: #fff;
+      box-shadow: 0 0 20px var(--err)
+    }
+
+    .led.on.info {
+      background: radial-gradient(circle at 30% 30%, #8ec8ff, #0066cc);
+      border-color: var(--info-2);
+      color: #fff;
+      box-shadow: 0 0 20px var(--info)
+    }
+
+    .led.on.warn {
+      background: radial-gradient(circle at 30% 30%, #ffd27a, #b87200);
+      border-color: var(--warn-2);
+      color: #fff;
+      box-shadow: 0 0 20px var(--warn)
+    }
+
+    .btn {
+      padding: 6px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--border-hard);
+      background: var(--panel-3);
+      color: var(--txt);
+      font-weight: 600;
+      font-size: .78rem;
+      cursor: pointer;
+      transition: all .15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px
+    }
+
+    .btn:hover {
+      background: var(--border-hard);
+      transform: translateY(-1px)
+    }
+
+    .btn:disabled {
+      opacity: .4;
+      cursor: not-allowed;
+      transform: none
+    }
+
+    .btn.primary {
+      background: rgba(58, 160, 255, .18);
+      border-color: var(--info);
+      color: var(--info-2)
+    }
+
+    .btn.ok {
+      background: rgba(0, 214, 143, .18);
+      border-color: var(--ok);
+      color: var(--ok-2)
+    }
+
+    .btn.err {
+      background: rgba(255, 77, 79, .18);
+      border-color: var(--err);
+      color: var(--err-2)
+    }
+
+    .btn.warn {
+      background: rgba(255, 176, 32, .18);
+      border-color: var(--warn);
+      color: var(--warn-2)
+    }
+
+    .btn.purple {
+      background: rgba(183, 148, 244, .18);
+      border-color: var(--purple);
+      color: var(--purple)
+    }
+
+    /* ERROR INJECTION PANEL */
+    .error-panel {
+      background: linear-gradient(135deg, #2a0a0e, #1a2235);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--err);
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin-bottom: 20px
+    }
+
+    .error-panel h3 {
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--err-2);
+      margin-bottom: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap
+    }
+
+    .error-panel h3 .subtitle {
+      font-size: .7rem;
+      color: var(--txt-3);
+      text-transform: none;
+      letter-spacing: 0;
+      font-weight: 400
+    }
+
+    .error-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px
+    }
+
+    .error-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: all .15s ease;
+      position: relative;
+      overflow: hidden
+    }
+
+    .error-card:hover {
+      border-color: var(--border-hard);
+      transform: translateY(-1px)
+    }
+
+    .error-card.active {
+      border-color: var(--err);
+      background: rgba(255, 77, 79, .08);
+      box-shadow: 0 0 0 1px var(--err) inset
+    }
+
+    .error-card.active::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--err);
+      animation: pulse 1.5s infinite
+    }
+
+    .error-card .icon {
+      font-size: 1.2rem;
+      margin-bottom: 4px;
+      display: block
+    }
+
+    .error-card .title {
+      font-weight: 700;
+      font-size: .78rem;
+      color: var(--txt);
+      margin-bottom: 2px
+    }
+
+    .error-card .desc {
+      font-size: .65rem;
+      color: var(--txt-3);
+      line-height: 1.3
+    }
+
+    .error-card.active .title {
+      color: var(--err-2)
+    }
+
+    .gate-fail-selector {
+      display: flex;
+      gap: 4px;
+      margin-top: 6px
+    }
+
+    .gate-fail-selector .gf-btn {
+      flex: 1;
+      padding: 3px 6px;
+      font-size: .65rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      color: var(--txt-3);
+      cursor: pointer;
+      transition: all .15s ease
+    }
+
+    .gate-fail-selector .gf-btn:hover {
+      border-color: var(--err);
+      color: var(--err-2)
+    }
+
+    .gate-fail-selector .gf-btn.active {
+      background: rgba(255, 77, 79, .2);
+      border-color: var(--err);
+      color: var(--err-2)
+    }
+
+    /* CONSOLE */
+    .console {
+      background: #050810;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .72rem;
+      max-height: 160px;
+      overflow-y: auto;
+      color: var(--txt-2)
+    }
+
+    .console .line {
+      padding: 2px 0;
+      line-height: 1.5;
+      display: flex;
+      gap: 8px
+    }
+
+    .console .ts {
+      color: var(--txt-4);
+      flex-shrink: 0
+    }
+
+    .console .info {
+      color: var(--info-2)
+    }
+
+    .console .ok {
+      color: var(--ok-2)
+    }
+
+    .console .warn {
+      color: var(--warn-2)
+    }
+
+    .console .err {
+      color: var(--err-2)
+    }
+
+    /* BEHAVIOR PANELS */
+    .behavior-panel {
+      background: linear-gradient(135deg, #1a2235, #121826);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden
+    }
+
+    .behavior-panel::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--purple), var(--info), var(--ok))
+    }
+
+    .behavior-panel h3 {
+      font-size: .76rem;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--purple);
+      margin-bottom: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: space-between;
+      flex-wrap: wrap
+    }
+
+    .behavior-panel h3 .discrepancy {
+      background: rgba(255, 77, 79, .15);
+      color: var(--err-2);
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: .6rem;
+      border: 1px solid var(--err);
+      animation: pulse 1.5s infinite
+    }
+
+    .semaphore {
+      background: linear-gradient(180deg, #222, #111);
+      border: 3px solid #333;
+      border-radius: 10px;
+      padding: 8px;
+      display: inline-flex;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, .5)
+    }
+
+    .lamp {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #1a1a1a;
+      border: 2px solid #333;
+      transition: all .3s ease
+    }
+
+    .lamp.red.on {
+      background: radial-gradient(circle at 30% 30%, #ff6b6b, #c81e1e);
+      box-shadow: 0 0 25px #ff4d4f, inset 0 0 15px rgba(255, 255, 255, .3);
+      border-color: #ff4d4f
+    }
+
+    .lamp.yellow.on {
+      background: radial-gradient(circle at 30% 30%, #ffd27a, #b87200);
+      box-shadow: 0 0 25px #ffb020, inset 0 0 15px rgba(255, 255, 255, .3);
+      border-color: #ffb020
+    }
+
+    .lamp.green.on {
+      background: radial-gradient(circle at 30% 30%, #6affb8, #009e69);
+      box-shadow: 0 0 25px #00d68f, inset 0 0 15px rgba(255, 255, 255, .3);
+      border-color: #00d68f
+    }
+
+    .elevator-shaft {
+      width: 90px;
+      height: 200px;
+      background: linear-gradient(180deg, #0a0a0a, #1a1a1a);
+      border: 2px solid var(--border-hard);
+      border-radius: 6px;
+      position: relative;
+      overflow: hidden
+    }
+
+    .elevator-car {
+      position: absolute;
+      left: 6px;
+      right: 6px;
+      height: 44px;
+      background: linear-gradient(180deg, #3aa0ff, #0066cc);
+      border-radius: 4px;
+      transition: bottom .6s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      color: white;
+      font-size: 1rem;
+      box-shadow: 0 0 15px rgba(58, 160, 255, .5)
+    }
+
+    .money-display {
+      background: #050810;
+      border: 2px solid var(--border-hard);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      margin-bottom: 10px
+    }
+
+    .money-display .label {
+      font-size: .62rem;
+      color: var(--txt-3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+      font-weight: 500
+    }
+
+    .money-display .value {
+      font-size: 1.5rem;
+      line-height: 1;
+      color: var(--ok-2)
+    }
+
+    .money-display .value.err {
+      color: var(--err)
+    }
+
+    .tank,
+    .soil {
+      flex: 1;
+      background: #0a0a0a;
+      border: 2px solid var(--border-hard);
+      border-radius: 6px;
+      position: relative;
+      height: 140px;
+      overflow: hidden;
+      min-width: 70px
+    }
+
+    .tank-fill {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(180deg, #3aa0ff, #0066cc);
+      transition: height .5s ease
+    }
+
+    .tank.low {
+      border-color: var(--err);
+      animation: pulse 1.5s infinite
+    }
+
+    .soil-fill {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(180deg, #8b6f47, #5a4a2f);
+      height: 100%
+    }
+
+    .soil-moisture {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(180deg, rgba(0, 214, 143, .7), rgba(0, 214, 143, .2));
+      transition: height .5s ease
+    }
+
+    .tank-label,
+    .soil-label {
+      font-size: .65rem;
+      color: var(--txt-3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-align: center;
+      margin-bottom: 4px;
+      font-weight: 600
+    }
+
+    .tank-pct,
+    .soil-pct {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: .8rem;
+      color: var(--info-2);
+      margin-top: 4px;
+      text-align: center
+    }
+
+    .soil-pct {
+      color: var(--ok-2)
+    }
+
+    .bit-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      background: var(--panel-3);
+      border: 1px solid var(--border);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--txt-3);
+      cursor: pointer;
+      transition: all .15s ease
+    }
+
+    .bit-btn.on {
+      background: rgba(58, 160, 255, .2);
+      border-color: var(--info);
+      color: var(--info-2);
+      box-shadow: 0 0 10px rgba(58, 160, 255, .3)
+    }
+
+    .bit-btn:hover {
+      transform: translateY(-2px)
+    }
+
+    .door-display {
+      width: 70px;
+      height: 90px;
+      background: var(--panel-2);
+      border: 3px solid var(--border-hard);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      transition: all .3s ease;
+      margin: 0 auto
+    }
+
+    .door-display.open {
+      background: rgba(0, 214, 143, .1);
+      border-color: var(--ok);
+      box-shadow: 0 0 25px rgba(0, 214, 143, .3)
+    }
+
+    .pwd-input {
+      padding: 8px 14px;
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--txt);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 3px;
+      text-align: center;
+      width: 100%
+    }
+
+    .pwd-input:focus {
+      outline: none;
+      border-color: var(--info);
+      box-shadow: 0 0 0 2px rgba(58, 160, 255, .2)
+    }
+
+    .product-btn {
+      padding: 10px 8px;
+      border-radius: 8px;
+      background: var(--panel-3);
+      border: 1px solid var(--border);
+      font-weight: 600;
+      font-size: .75rem;
+      color: var(--txt);
+      cursor: pointer;
+      transition: all .15s ease;
+      text-align: center
+    }
+
+    .product-btn:hover {
+      border-color: var(--warn);
+      color: var(--warn-2);
+      transform: translateY(-1px)
+    }
+
+    .product-btn:disabled {
+      opacity: .4;
+      cursor: not-allowed;
+      transform: none
+    }
+
+    .floor-btn {
+      padding: 6px 14px;
+      border-radius: 6px;
+      background: var(--panel-3);
+      border: 1px solid var(--border);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: var(--txt);
+      cursor: pointer;
+      transition: all .15s ease;
+      font-size: .85rem
+    }
+
+    .floor-btn:hover {
+      border-color: var(--info);
+      color: var(--info-2)
+    }
+
+    .floor-btn.current {
+      background: rgba(58, 160, 255, .2);
+      border-color: var(--info);
+      color: var(--info-2)
+    }
+
+    .coin-btn {
+      flex: 1;
+      min-width: 70px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      background: var(--panel-3);
+      border: 1px solid var(--border);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      font-size: .85rem;
+      color: var(--txt);
+      cursor: pointer;
+      transition: all .15s ease
+    }
+
+    .coin-btn:hover {
+      border-color: var(--ok);
+      color: var(--ok-2);
+      transform: translateY(-1px)
+    }
+
+    /* AUX DISPLAYS */
+    .aux-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px
+    }
+
+    .aux-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .75rem;
+      text-align: center
+    }
+
+    .aux-box .lbl {
+      font-size: .58rem;
+      color: var(--txt-3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 2px;
+      font-weight: 600
+    }
+
+    .aux-box .val {
+      font-weight: 800;
+      font-size: .95rem;
+      color: var(--txt)
+    }
+
+    .aux-box .val.err {
+      color: var(--err)
+    }
+
+    .aux-box .val.ok {
+      color: var(--ok)
+    }
+
+    /* ============================================================
+   AUTO-SIMULATION PANEL
+   ============================================================ */
+    .auto-sim-panel {
+      background: linear-gradient(135deg, #0a1a2e, #121826);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--info);
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin-bottom: 20px;
+      position: relative
+    }
+
+    .auto-sim-panel h3 {
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--info-2);
+      margin-bottom: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap
+    }
+
+    .auto-sim-panel .status-pill {
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      font-size: .65rem;
+      font-weight: 600;
+      color: var(--txt-3);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px
+    }
+
+    .auto-sim-panel .status-pill.running {
+      background: rgba(0, 214, 143, .15);
+      border-color: var(--ok);
+      color: var(--ok-2)
+    }
+
+    .auto-sim-panel .status-pill.running::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--ok);
+      animation: pulse 1s infinite;
+      box-shadow: 0 0 8px var(--ok)
+    }
+
+    .auto-sim-panel .status-pill.paused {
+      background: rgba(255, 176, 32, .15);
+      border-color: var(--warn);
+      color: var(--warn-2)
+    }
+
+    .autosim-controls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      align-items: center
+    }
+
+    .autosim-select {
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 10px;
+      color: var(--txt);
+      font-size: .75rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit
+    }
+
+    .autosim-select:focus {
+      outline: none;
+      border-color: var(--info)
+    }
+
+    .autosim-errors {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 10px 12px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 12px;
+      align-items: center
+    }
+
+    .autosim-errors label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: .72rem;
+      color: var(--txt-2);
+      cursor: pointer;
+      font-weight: 500
+    }
+
+    .autosim-errors input[type="checkbox"] {
+      accent-color: var(--info);
+      cursor: pointer
+    }
+
+    .autosim-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 8px;
+      margin-bottom: 12px
+    }
+
+    .autosim-stat {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      text-align: center
+    }
+
+    .autosim-stat .lbl {
+      font-size: .56rem;
+      color: var(--txt-3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+      margin-bottom: 3px
+    }
+
+    .autosim-stat .val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--info-2)
+    }
+
+    .autosim-stat .val.warn {
+      color: var(--warn)
+    }
+
+    .autosim-stat .val.err {
+      color: var(--err)
+    }
+
+    .autosim-stat .val.ok {
+      color: var(--ok)
+    }
+
+    .autosim-log {
+      background: #050810;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .7rem;
+      max-height: 150px;
+      overflow-y: auto;
+      color: var(--txt-2)
+    }
+
+    .autosim-log .line {
+      padding: 1px 0;
+      line-height: 1.5
+    }
+
+    .autosim-log .line:first-child {
+      color: var(--info-2)
+    }
+
+    .alu-bench {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+      position: relative
+    }
+
+    .alu-bench h4 {
+      font-size: .7rem;
+      color: var(--purple);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap
+    }
+
+    .alu-bench h4 .alu-badge {
+      font-size: .6rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--panel-3);
+      color: var(--txt-3);
+      text-transform: none;
+      letter-spacing: 0;
+      font-weight: 500
+    }
+
+    .alu-bench h4 .alu-badge.bug {
+      background: rgba(255, 77, 79, .15);
+      color: var(--err-2);
+      border: 1px solid var(--err);
+      animation: pulse 1.5s infinite
+    }
+
+    .alu-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .8rem
+    }
+
+    .alu-row+.alu-row {
+      margin-top: 10px
+    }
+
+    .alu-row .alu-item {
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 10px
+    }
+
+    .alu-row .flag {
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: var(--panel-3);
+      font-weight: 800;
+      min-width: 28px;
+      text-align: center;
+      display: inline-block
+    }
+
+    .alu-row .flag.on {
+      background: rgba(0, 214, 143, .2);
+      color: var(--ok-2)
+    }
+
+    .alu-row .flag.missed {
+      background: rgba(255, 77, 79, .2);
+      color: var(--err-2);
+      animation: pulse 1s infinite
+    }
+
+    .alu-row .flag.bug {
+      background: rgba(255, 176, 32, .2);
+      color: var(--warn-2)
+    }
+
+    /* ============================================================
+   COMPACT LAYOUT v5.1
+   ============================================================ */
+    html {
+      font-size: 13px;
+    }
+
+    body {
+      font-size: 12.5px;
+      line-height: 1.45;
+    }
+
+    :root {
+      --topbar-h: 52px;
+    }
+
+    header {
+      padding: 0 14px;
+      gap: 6px;
+    }
+
+    header h1 {
+      font-size: .82rem;
+      gap: 6px;
+    }
+
+    header h1>span:first-child {
+      font-size: .95rem;
+    }
+
+    header h1>.text-xs {
+      font-size: .58rem;
+      padding: 1px 4px;
+    }
+
+    header .pill {
+      padding: 2px 7px;
+      font-size: .62rem;
+      gap: 4px;
+    }
+
+    header .pill .dot {
+      width: 6px;
+      height: 6px;
+    }
+
+    header .gap-2 {
+      gap: 6px;
+    }
+
+    nav {
+      padding: 4px 14px 0;
+      gap: 2px;
+    }
+
+    .tab-btn {
+      padding: 6px 10px;
+      font-size: .72rem;
+    }
+
+    main {
+      padding: 14px;
+    }
+
+    main.space-y-6>*+* {
+      margin-top: 14px !important;
+    }
+
+    .card {
+      padding: 12px 14px;
+      border-radius: 10px;
+    }
+
+    .card h3 {
+      font-size: .72rem;
+      margin-bottom: 10px;
+      letter-spacing: .8px;
+    }
+
+    .card p.text-xs,
+    .card .text-xs {
+      font-size: .68rem;
+    }
+
+    .btn {
+      padding: 4px 10px;
+      font-size: .7rem;
+      border-radius: 5px;
+    }
+
+    .input-row {
+      padding: 6px 10px;
+      margin-bottom: 6px;
+      border-radius: 6px;
+    }
+
+    .input-row .bit {
+      width: 24px;
+      height: 24px;
+      font-size: .8rem;
+    }
+
+    .input-row .text-xs {
+      font-size: .68rem;
+    }
+
+    .toggle {
+      width: 34px;
+      height: 18px;
+    }
+
+    .toggle::after {
+      width: 12px;
+      height: 12px;
+    }
+
+    .input-row.active .toggle::after {
+      left: 17px;
+    }
+
+    .aux-row {
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .aux-box {
+      padding: 6px 8px;
+      border-radius: 5px;
+    }
+
+    .aux-box .lbl {
+      font-size: .54rem;
+    }
+
+    .aux-box .val {
+      font-size: .85rem;
+    }
+
+    .error-panel {
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      border-radius: 10px;
+    }
+
+    .error-panel h3 {
+      font-size: .72rem;
+      margin-bottom: 10px;
+    }
+
+    .error-panel h3 .subtitle {
+      font-size: .6rem;
+    }
+
+    .error-grid {
+      gap: 8px;
+    }
+
+    .error-card {
+      padding: 8px 10px;
+      border-radius: 6px;
+    }
+
+    .error-card .icon {
+      font-size: 1rem;
+    }
+
+    .error-card .title {
+      font-size: .72rem;
+    }
+
+    .error-card .desc {
+      font-size: .58rem;
+    }
+
+    .gate-fail-selector {
+      gap: 3px;
+      margin-top: 4px;
+    }
+
+    .gate-fail-selector .gf-btn {
+      padding: 2px 4px;
+      font-size: .58rem;
+    }
+
+    .auto-sim-panel {
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      border-radius: 10px;
+    }
+
+    .auto-sim-panel h3 {
+      font-size: .72rem;
+      margin-bottom: 10px;
+    }
+
+    .autosim-controls {
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .autosim-select {
+      padding: 4px 8px;
+      font-size: .7rem;
+    }
+
+    .autosim-errors {
+      gap: 10px;
+      padding: 8px 10px;
+      margin-bottom: 10px;
+    }
+
+    .autosim-errors label {
+      font-size: .66rem;
+    }
+
+    .autosim-stats-grid {
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .autosim-stat {
+      padding: 6px 8px;
+      border-radius: 6px;
+    }
+
+    .autosim-stat .lbl {
+      font-size: .52rem;
+    }
+
+    .autosim-stat .val {
+      font-size: .88rem;
+    }
+
+    .autosim-log {
+      padding: 8px 10px;
+      font-size: .64rem;
+      max-height: 120px;
+      border-radius: 6px;
+    }
+
+    .alu-bench {
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .alu-bench h4 {
+      font-size: .66rem;
+      margin-bottom: 8px;
+    }
+
+    .alu-row {
+      font-size: .72rem;
+      gap: 8px;
+    }
+
+    .alu-row .alu-item {
+      padding: 3px 8px;
+      font-size: .72rem;
+    }
+
+    .alu-row .flag {
+      font-size: .7rem;
+      padding: 1px 6px;
+    }
+
+    .behavior-panel {
+      padding: 14px;
+      margin-bottom: 14px;
+      border-radius: 10px;
+    }
+
+    .behavior-panel h3 {
+      font-size: .72rem;
+      margin-bottom: 12px;
+    }
+
+    .console {
+      padding: 10px 12px;
+      font-size: .64rem;
+      max-height: 130px;
+    }
+
+    .console .line {
+      padding: 1px 0;
+    }
+
+    .truth-table th,
+    .truth-table td {
+      padding: 4px 8px;
+      font-size: .7rem;
+    }
+
+    .kmap-cell {
+      padding: 7px 4px;
+      font-size: .78rem;
+    }
+
+    .kmap-header {
+      padding: 4px;
+      font-size: .65rem;
+    }
+
+    .led {
+      width: 36px;
+      height: 36px;
+      font-size: .95rem;
+    }
+
+    .auto-sim-panel .pill,
+    .auto-sim-panel .status-pill {
+      font-size: .6rem;
+      padding: 2px 8px;
+    }
+
+    /* ============================================================
+   REPORT MODAL v5.1
+   ============================================================ */
+    #reportModal {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .report-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, .78);
+      backdrop-filter: blur(4px);
+    }
+
+    .report-window {
+      position: relative;
+      width: min(960px, 94vw);
+      max-height: 90vh;
+      background: var(--panel);
+      border: 1px solid var(--border-hard);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, .7);
+    }
+
+    .report-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(90deg, var(--panel-2), var(--panel));
+      border-radius: 12px 12px 0 0;
+    }
+
+    .report-header h2 {
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--purple);
+    }
+
+    .report-body {
+      padding: 18px;
+      overflow-y: auto;
+      flex: 1;
+      font-size: .78rem;
+      line-height: 1.55;
+    }
+
+    .report-footer {
+      padding: 10px 18px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 6px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      background: var(--panel-2);
+      border-radius: 0 0 12px 12px;
+    }
+
+    .report-section {
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .report-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+
+    .report-section h3 {
+      font-size: .7rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--info-2);
+      margin-bottom: 10px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .report-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .7rem;
+    }
+
+    .report-table th,
+    .report-table td {
+      padding: 5px 8px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .report-table th {
+      color: var(--txt-3);
+      font-weight: 600;
+      font-size: .6rem;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    .report-table td.val {
+      text-align: right;
+      color: var(--txt);
+      font-weight: 700;
+    }
+
+    .report-table td.val.ok {
+      color: var(--ok-2);
+    }
+
+    .report-table td.val.warn {
+      color: var(--warn-2);
+    }
+
+    .report-table td.val.err {
+      color: var(--err-2);
+    }
+
+    .report-verdict {
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      border-left: 4px solid var(--ok);
+      background: rgba(0, 214, 143, .08);
+      font-size: .78rem;
+      line-height: 1.5;
+    }
+
+    .report-verdict.warn {
+      border-left-color: var(--warn);
+      background: rgba(255, 176, 32, .08);
+    }
+
+    .report-verdict.err {
+      border-left-color: var(--err);
+      background: rgba(255, 77, 79, .08);
+    }
+
+    .report-verdict .title {
+      font-weight: 700;
+      font-size: .82rem;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .report-verdict.ok .title {
+      color: var(--ok-2);
+    }
+
+    .report-verdict.warn .title {
+      color: var(--warn-2);
+    }
+
+    .report-verdict.err .title {
+      color: var(--err-2);
+    }
+
+    .report-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 8px;
+    }
+
+    .report-kpi {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+    }
+
+    .report-kpi .lbl {
+      font-size: .56rem;
+      color: var(--txt-3);
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      font-weight: 600;
+    }
+
+    .report-kpi .val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.05rem;
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    .report-kpi .val.ok {
+      color: var(--ok-2);
+    }
+
+    .report-kpi .val.warn {
+      color: var(--warn-2);
+    }
+
+    .report-kpi .val.err {
+      color: var(--err-2);
+    }
+
+    .report-kpi .val.info {
+      color: var(--info-2);
+    }
+
+    .report-pre {
+      background: #050810;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .66rem;
+      color: var(--txt-2);
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.5;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header
+    class="h-[var(--topbar-h)] px-6 bg-[var(--panel)] border-b border-[var(--border)] flex justify-between items-center shrink-0">
+    <h1 class="text-base font-bold flex items-center gap-2">
+      🎓 <span class="text-[var(--accent-2)]">Simulador</span> de Sistemas Digitais 
+      <span class="text-xs font-normal text-[var(--txt-3)] px-2 py-0.5 border border-[var(--border)] rounded">v5.1 ·
+        auto/manual-sim</span>
+    </h1>
+    <div class="flex gap-2 flex-wrap">
+      <div class="pill"><span class="dot ok" id="pillClock"></span>Clock: <strong id="pillClockVal"
+          class="text-[var(--ok-2)]">1 Hz</strong></div>
+      <div class="pill"><span class="dot info"></span>Sistema: <strong id="pillActiveName"
+          class="text-[var(--info-2)]">Alarme</strong></div>
+      <div class="pill" id="pillErrors" style="display:none"><span class="dot err"></span>Erros: <strong
+          id="pillErrorCount" class="text-[var(--err-2)]">0</strong></div>
+      <div class="pill mono">Uptime: <strong id="pillUptime" class="text-[var(--accent-2)]">00:00</strong></div>
+    </div>
+  </header>
+
+  <nav class="flex gap-1 px-6 pt-2 bg-[var(--panel)] border-b border-[var(--border)] overflow-x-auto shrink-0">
+    <button class="tab-btn active" data-tab="alarme">🚨 Alarme (4V)</button>
+    <button class="tab-btn" data-tab="acesso">🔐 Acesso (2V)</button>
+    <button class="tab-btn" data-tab="irrigacao">💧 Irrigação (4V)</button>
+    <button class="tab-btn" data-tab="paridade">🔢 Paridade (4V)</button>
+    <button class="tab-btn" data-tab="semaforo">🚦 Semáforo (2V)</button>
+    <button class="tab-btn" data-tab="vendas">🥤 Vendas (3V)</button>
+    <button class="tab-btn" data-tab="elevador">🛗 Elevador (3V)</button>
+  </nav>
+
+  <main class="flex-1 overflow-y-auto p-6 space-y-6">
+
+    <!-- HERO -->
+    <div class="card info flex justify-between items-center wrap gap-4">
+      <div>
+        <h2 class="text-base font-bold text-[var(--info-2)]" id="sysTitle">🚨 Sistema de Alarme Residencial</h2>
+        <p class="text-xs text-[var(--txt-3)]" id="sysDesc">Análise combinacional com portas lógicas, tabela-verdade e
+          mapa de Karnaugh.</p>
+      </div>
+      <div class="flex gap-2 flex-wrap">
+        <button class="btn primary" id="btnClockToggle">⏸ Pausar Clock</button>
+        <button class="btn" id="btnResetInputs">↺ Reset Entradas</button>
+        <button class="btn err" id="btnResetAll">🛑 Reset Geral</button>
+      </div>
+    </div>
+
+    <!-- ERROR INJECTION -->
+    <div class="error-panel">
+      <h3>
+        💉 Injeção de Erros Digitais
+        <span class="subtitle">Clique para ativar/desativar · ou use o modo automático/manual abaixo</span>
+      </h3>
+      <div class="error-grid">
+        <div class="error-card" data-error="parity">
+          <span class="icon">🔀</span>
+          <div class="title">Bits Corrompidos</div>
+          <div class="desc">Flip aleatório de bits (paridade)</div>
+        </div>
+        <div class="error-card" data-error="conversion">
+          <span class="icon">🔢</span>
+          <div class="title">Conversão Bin/Dec</div>
+          <div class="desc">Bit travado distorce decimal</div>
+        </div>
+        <div class="error-card" data-error="overflow">
+          <span class="icon">📈</span>
+          <div class="title">Overflow / Underflow</div>
+          <div class="desc">ACC estoura sem flag CF</div>
+        </div>
+        <div class="error-card" data-error="gateFail">
+          <span class="icon">⚡</span>
+          <div class="title">Falha de Porta</div>
+          <div class="desc">AND, OR ou XOR travada</div>
+          <div class="gate-fail-selector">
+            <button class="gf-btn" data-gate="AND">AND</button>
+            <button class="gf-btn" data-gate="OR">OR</button>
+            <button class="gf-btn" data-gate="XOR">XOR</button>
+          </div>
+        </div>
+        <div class="error-card" data-error="clockJitter">
+          <span class="icon">🕐</span>
+          <div class="title">Clock Instável</div>
+          <div class="desc">Ciclos perdidos (jitter)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= AUTO / MANUAL SIMULATION ================= -->
+    <div class="auto-sim-panel">
+      <h3>
+        🤖 Simulação Automática e Manual (v5.1)
+        <span class="status-pill" id="autosimStatus">● Parado</span>
+      </h3>
+
+      <div class="autosim-controls">
+        <button class="btn ok" id="autosimStart">▶ Iniciar Auto</button>
+        <button class="btn primary" id="autosimStepBtn">⏭ Passo a Passo (Manual)</button>
+        <button class="btn warn" id="autosimPause" disabled>⏸ Pausar</button>
+        <button class="btn err" id="autosimStop" disabled>⏹ Parar</button>
+        <button class="btn" id="autosimClear">🗑 Limpar Log</button>
+        <select class="autosim-select" id="autosimMode">
+          <option value="stress">Stress Aleatório</option>
+          <option value="sweep">Sweep de Entradas</option>
+          <option value="diagnostic">Diagnóstico Completo</option>
+        </select>
+        <select class="autosim-select" id="autosimSpeed">
+          <option value="8000">🐢 1 s</option>
+          <option value="8000" selected>⏱ 8000 ms</option>
+          <option value="700">⚡ 250 ms</option>
+          <option value="700">🚀 100 ms (Turbo)</option>
+        </select>
+        <span class="pill" style="margin-left:auto;font-size:.66rem">
+          Cenário: <strong id="autosimScenario" class="text-[var(--purple)]">—</strong>
+        </span>
+        <button class="btn purple" id="autosimReport">📋 Gerar Relatório</button>
+      </div>
+
+      <div class="autosim-errors" id="autosimErrFilter">
+        <span style="font-size:.7rem;color:var(--txt-3);font-weight:600">Injetar no Stress:</span>
+        <label><input type="checkbox" data-ae="parity" checked> 🔀 Paridade</label>
+        <label><input type="checkbox" data-ae="conversion" checked> 🔢 Conversão</label>
+        <label><input type="checkbox" data-ae="overflow" checked> 📈 Overflow</label>
+        <label><input type="checkbox" data-ae="gateFail" checked> ⚡ Gate Fail</label>
+        <label><input type="checkbox" data-ae="clockJitter" checked> 🕐 Jitter</label>
+      </div>
+
+      <div class="autosim-stats-grid">
+        <div class="autosim-stat">
+          <div class="lbl">Ciclos</div>
+          <div class="val" id="asCycles">0</div>
+        </div>
+        <div class="autosim-stat">
+          <div class="lbl">Cobertura</div>
+          <div class="val ok" id="asCoverage">0/16</div>
+        </div>
+        <div class="autosim-stat">
+          <div class="lbl">Discrepâncias</div>
+          <div class="val warn" id="asDisc">0</div>
+        </div>
+        <div class="autosim-stat">
+          <div class="lbl">Taxa de Erro</div>
+          <div class="val err" id="asRate">0.0%</div>
+        </div>
+        <div class="autosim-stat">
+          <div class="lbl">Parity Flips</div>
+          <div class="val" id="asParity">0</div>
+        </div>
+        <div class="autosim-stat">
+          <div class="lbl">Overflow Det.</div>
+          <div class="val" id="asOverflow">0/0</div>
+        </div>
+        <div class="autosim-stat">
+          <div class="lbl">Gate Fails</div>
+          <div class="val" id="asGate">0</div>
+        </div>
+        <div class="autosim-stat">
+          <div class="lbl">Jitter Skips</div>
+          <div class="val" id="asJitter">0</div>
+        </div>
+      </div>
+
+      <div class="alu-bench">
+        <h4>
+          🧮 Test Bench ALU · ACC 8-bit
+          <span class="alu-badge" id="aluStatus">CF operacional</span>
+        </h4>
+        <div class="alu-row">
+          <span class="alu-item">ACC: <strong id="aluAcc" style="color:var(--info-2)">0x00</strong> (<span
+              id="aluAccDec">0</span>)</span>
+          <span class="alu-item">CF: <span class="flag" id="aluCF">0</span></span>
+          <span class="alu-item">VF: <span class="flag" id="aluVF">0</span></span>
+          <span id="aluMsg" style="color:var(--txt-3);font-size:.7rem;margin-left:auto"></span>
+        </div>
+        <div class="alu-row">
+          <button class="btn" data-alu="add1">+1</button>
+          <button class="btn" data-alu="sub1">−1</button>
+          <button class="btn" data-alu="add15">+0x0F</button>
+          <button class="btn primary" data-alu="test">🔬 Auto Test (20 ops)</button>
+          <button class="btn err" data-alu="reset">↺ Reset</button>
+        </div>
+      </div>
+
+      <div class="autosim-log" id="autosimLog">
+        <div class="line">[aguardando] Clique em "Iniciar Auto" ou "Passo a Passo (Manual)" para começar...</div>
+      </div>
+    </div>
+
+    <!-- BEHAVIOR -->
+    <div id="behaviorPanel"></div>
+
+    <!-- DIDACTIC GRID -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div class="lg:col-span-4 space-y-4">
+        <div class="card info">
+          <h3>🎛️ Entradas (Chaves)</h3>
+          <div id="inputsContainer"></div>
+          <div class="aux-row">
+            <div class="aux-box">
+              <div class="lbl">Binário</div>
+              <div class="val" id="auxBin">0000</div>
+            </div>
+            <div class="aux-box">
+              <div class="lbl">Hex</div>
+              <div class="val" id="auxHex">0x0</div>
+            </div>
+          </div>
+          <div class="aux-row">
+            <div class="aux-box">
+              <div class="lbl">Decimal</div>
+              <div class="val" id="auxDec">0</div>
+            </div>
+            <div class="aux-box">
+              <div class="lbl">Integridade</div>
+              <div class="val" id="auxParity">OK</div>
+            </div>
+          </div>
+        </div>
+        <div class="card purple">
+          <h3>🔌 Diagrama de Portas</h3>
+          <svg class="gate-svg" id="gateSvg" viewBox="0 0 300 130"></svg>
+          <div class="mt-2 text-xs text-[var(--txt-3)] flex justify-between flex-wrap gap-2">
+            <span>Sinal: <strong id="gateActiveText" class="text-[var(--ok-2)]">0</strong></span>
+            <span id="gateFailWarning" class="text-[var(--err-2)]" style="display:none">⚠ Porta <b
+                id="gateFailName">?</b> com falha</span>
+          </div>
+        </div>
+        <div class="card ok">
+          <h3>💡 Saída Real (com erros)</h3>
+          <div class="grid grid-cols-1 gap-3 text-center" id="outputsContainer"></div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-4">
+        <div class="card">
+          <h3>📊 Tabela Verdade (Especificação)</h3>
+          <p class="text-xs text-[var(--txt-3)] mb-3">Mostra o comportamento <b>correto</b>. Linha azul = estado atual.
+          </p>
+          <div class="overflow-x-auto max-h-[480px] overflow-y-auto">
+            <table class="truth-table" id="truthTable"></table>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-4">
+        <div class="card warn">
+          <h3>🗺️ Mapa de Karnaugh</h3>
+          <p class="text-xs text-[var(--txt-3)] mb-3">Célula amarela = estado atual.</p>
+          <div class="p-4 bg-[var(--bg)] border border-[var(--border)] rounded flex items-center justify-center">
+            <div id="kmapContainer" class="w-full"></div>
+          </div>
+          <div class="mt-4 p-3 bg-[var(--panel-3)] border border-[var(--border)] rounded">
+            <div class="text-xs font-bold text-[var(--warn-2)] uppercase mb-1">Equação Simplificada</div>
+            <div class="mono text-sm font-extrabold text-[var(--txt)]" id="booleanExpr">S = A·(D+J+M)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONSOLE -->
+    <div class="card">
+      <h3>📟 Console de Eventos</h3>
+      <div class="console" id="console">
+        <div class="line"><span class="ts">[boot]</span><span class="ok">Sistema inicializado · aguardando ações</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONCEPTS -->
+    <div class="card purple">
+      <h3>📚 Conceitos Teóricos</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-[var(--txt-2)]">
+        <div class="p-3 bg-[var(--bg)] border border-[var(--border)] rounded">
+          <strong class="text-[var(--accent-2)] block mb-1">1. Portas Lógicas</strong>
+          <span>AND, OR, NOT, XOR — operações fundamentais da Álgebra de Boole.</span>
+        </div>
+        <div class="p-3 bg-[var(--bg)] border border-[var(--border)] rounded">
+          <strong class="text-[var(--info-2)] block mb-1">2. Tabela Verdade</strong>
+          <span>2ⁿ linhas · enumera exaustivamente todas as combinações de entrada.</span>
+        </div>
+        <div class="p-3 bg-[var(--bg)] border border-[var(--border)] rounded">
+          <strong class="text-[var(--warn-2)] block mb-1">3. Código Gray</strong>
+          <span>Adjacentes diferem em 1 bit (00, 01, 11, 10) — permite agrupamentos no K-Map.</span>
+        </div>
+        <div class="p-3 bg-[var(--bg)] border border-[var(--border)] rounded">
+          <strong class="text-[var(--err-2)] block mb-1">4. Injeção de Erros</strong>
+          <span>Simula falhas reais: paridade, overflow, porta travada, jitter. Compare spec × implementação.</span>
+        </div>
+        <div class="p-3 bg-[var(--bg)] border border-[var(--border)] rounded md:col-span-2">
+          <strong class="text-[var(--ok-2)] block mb-1">5. Simulação Automática e Manual</strong>
+          <span>Varredura exaustiva, stress aleatório e diagnóstico sequencial de falhas. Execução automática ou passo a passo manual.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= REPORT MODAL v5.1 ================= -->
+    <div id="reportModal" style="display:none">
+      <div class="report-backdrop" onclick="closeReport()"></div>
+      <div class="report-window">
+        <div class="report-header">
+          <h2>📋 Relatório Final de Simulação</h2>
+          <button class="btn err" onclick="closeReport()">✕ Fechar</button>
+        </div>
+        <div class="report-body" id="reportBody"></div>
+        <div class="report-footer">
+          <button class="btn primary" onclick="copyReport()">📋 Copiar</button>
+          <button class="btn ok" onclick="downloadReportTxt()">💾 Baixar .txt</button>
+          <button class="btn purple" onclick="downloadReportJson()">📊 Baixar .json</button>
+          <button class="btn warn" onclick="printReport()">🖨 Imprimir / PDF</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    /* ============================================================
+       PROJECTS DATA
+       ============================================================ */
+    const projects = {
+      alarme: {
+        title: "🚨 Alarme Residencial (4 Variáveis)",
+        desc: "Sirene dispara se Armado (A) E algum sensor (D/J/M) ativo. D=porta, J=janela, M=movimento.",
+        vars: ["A", "D", "J", "M"],
+        outNames: ["Sirene (S)"],
+        exprSOP: "S = A·(D + J + M)",
+        fn: (a, d, j, m) => (a && (d || j || m)) ? 1 : 0,
+        kmapType: "4V",
+        svg: (v, o, fail) => `
+      <line x1="15" y1="30" x2="80" y2="30" stroke="${v[1] ? '#00d68f' : '#324066'}" stroke-width="2"/>
+      <line x1="15" y1="55" x2="80" y2="55" stroke="${v[2] ? '#00d68f' : '#324066'}" stroke-width="2"/>
+      <line x1="15" y1="80" x2="80" y2="80" stroke="${v[3] ? '#00d68f' : '#324066'}" stroke-width="2"/>
+      <path d="M 80 20 Q 105 55 80 90 Q 120 90 140 55 Q 120 20 80 20 Z" fill="#1a2235" stroke="${fail === 'OR' ? '#ff4d4f' : '#3aa0ff'}" stroke-width="2"/>
+      <text x="98" y="60" fill="#fff" font-size="9" font-family="monospace">OR</text>
+      <line x1="140" y1="55" x2="175" y2="55" stroke="${(v[1] || v[2] || v[3]) ? '#00d68f' : '#324066'}" stroke-width="2"/>
+      <line x1="15" y1="110" x2="175" y2="110" stroke="${v[0] ? '#00d68f' : '#324066'}" stroke-width="2"/>
+      <path d="M 175 15 L 200 15 A 40 40 0 0 1 200 115 L 175 115 Z" fill="#1a2235" stroke="${fail === 'AND' ? '#ff4d4f' : '#ff4757'}" stroke-width="2"/>
+      <text x="182" y="68" fill="#fff" font-size="9" font-family="monospace">AND</text>
+      <line x1="240" y1="65" x2="280" y2="65" stroke="${o ? '#00d68f' : '#324066'}" stroke-width="3"/>
+      <circle cx="285" cy="65" r="6" fill="${o ? '#ff4d4f' : '#121826'}" stroke="#ff4d4f" stroke-width="1.5"/>`,
+      },
+      acesso: {
+        title: "🔐 Controle de Acesso (2 Variáveis)",
+        desc: "Porta abre APENAS com Cartão válido (C) E Senha correta (P). Autenticação 2FA.",
+        vars: ["C", "P"], outNames: ["Abrir (S)"], exprSOP: "S = C · P",
+        fn: (c, p) => (c && p) ? 1 : 0, kmapType: "2V",
+        svg: (v, o, fail) => `
+      <line x1="30" y1="45" x2="130" y2="45" stroke="${v[0] ? '#00d68f' : '#324066'}" stroke-width="2"/>
+      <line x1="30" y1="85" x2="130" y2="85" stroke="${v[1] ? '#00d68f' : '#324066'}" stroke-width="2"/>
+      <path d="M 130 25 L 170 25 A 35 35 0 0 1 170 95 L 130 95 Z" fill="#1a2235" stroke="${fail === 'AND' ? '#ff4d4f' : '#3aa0ff'}" stroke-width="2"/>
+      <text x="142" y="64" fill="#fff" font-size="10" font-family="monospace">AND</text>
+      <line x1="205" y1="60" x2="270" y2="60" stroke="${o ? '#00d68f' : '#324066'}" stroke-width="3"/>
+      <circle cx="275" cy="60" r="6" fill="${o ? '#00d68f' : '#121826'}" stroke="#00d68f" stroke-width="1.5"/>`,
+      },
+      irrigacao: {
+        title: "💧 Irrigação Automática (4 Variáveis)",
+        desc: "Bomba liga se Reservatório OK (R) E [(Solo Seco (U) E modo auto) OU (Manual (M) E Botão (B))].",
+        vars: ["R", "U", "M", "B"], outNames: ["Bomba (S)"], exprSOP: "S = R·U·M̄ + R·M·B",
+        fn: (r, u, m, b) => (r && ((u && !m) || (m && b))) ? 1 : 0, kmapType: "4V",
+        svg: (v, o, fail) => `
+      <line x1="10" y1="20" x2="60" y2="20" stroke="${v[0] ? '#00d68f' : '#324066'}" stroke-width="2"/>
+      <line x1="10" y1="65" x2="60" y2="65" stroke="${v[1] ? '#00d68f' : '#324066'}" stroke-width="2"/>
+      <line x1="10" y1="110" x2="50" y2="110" stroke="${v[2] ? '#00d68f' : '#324066'}" stroke-width="2"/>
+      <polygon points="50,100 75,110 50,120" fill="#1a2235" stroke="#b794f4" stroke-width="2"/>
+      <line x1="75" y1="110" x2="105" y2="110" stroke="${!v[2] ? '#00d68f' : '#324066'}" stroke-width="2"/>
+      <line x1="60" y1="95" x2="105" y2="95" stroke="${v[3] ? '#00d68f' : '#324066'}" stroke-width="2"/>
+      <path d="M 105 10 L 135 10 A 30 30 0 0 1 135 70 L 105 70 Z" fill="#1a2235" stroke="${fail === 'AND' ? '#ff4d4f' : '#ffb020'}" stroke-width="2"/>
+      <text x="110" y="45" fill="#fff" font-size="8" font-family="monospace">AND</text>
+      <line x1="160" y1="40" x2="180" y2="40" stroke="${(v[1] && !v[2]) ? '#00d68f' : '#324066'}" stroke-width="2"/>
+      <path d="M 105 80 L 135 80 A 30 30 0 0 1 135 140 L 105 140 Z" fill="#1a2235" stroke="${fail === 'AND' ? '#ff4d4f' : '#ffb020'}" stroke-width="2" transform="translate(0,-10)"/>
+      <text x="110" y="115" fill="#fff" font-size="8" font-family="monospace">AND</text>
+      <line x1="160" y1="110" x2="180" y2="110" stroke="${(v[2] && v[3]) ? '#00d68f' : '#324066'}" stroke-width="2"/>
+      <path d="M 180 25 Q 205 65 180 105 Q 220 105 235 65 Q 220 25 180 25 Z" fill="#1a2235" stroke="${fail === 'OR' ? '#ff4d4f' : '#3aa0ff'}" stroke-width="2"/>
+      <text x="198" y="69" fill="#fff" font-size="9" font-family="monospace">OR</text>
+      <line x1="235" y1="65" x2="270" y2="65" stroke="${o ? '#00d68f' : '#324066'}" stroke-width="3"/>`,
+      },
+      paridade: {
+        title: "🔢 Detector de Paridade (4 bits)",
+        desc: "Gera bit de paridade usando XOR em cascata. Detecta número ímpar de bits em 1.",
+        vars: ["A", "B", "C", "D"], outNames: ["Paridade (P)"], exprSOP: "P = A ⊕ B ⊕ C ⊕ D",
+        fn: (a, b, c, d) => (a ^ b ^ c ^ d) ? 1 : 0, kmapType: "4V",
+        svg: (v, o, fail) => `
+      <line x1="10" y1="25" x2="55" y2="25" stroke="${v[0] ? '#00d68f' : '#324066'}" stroke-width="2"/>
+      <line x1="10" y1="45" x2="55" y2="45" stroke="${v[1] ? '#00d68f' : '#324066'}" stroke-width="2"/>
+      <path d="M 55 15 Q 70 35 55 55 Q 75 55 85 35 Q 75 15 55 15 Z" fill="#1a2235" stroke="${fail === 'XOR' ? '#ff4d4f' : '#ffb020'}" stroke-width="2"/>
+      <line x1="10" y1="80" x2="55" y2="80" stroke="${v[2] ? '#00d68f' : '#324066'}" stroke-width="2"/>
+      <line x1="10" y1="100" x2="55" y2="100" stroke="${v[3] ? '#00d68f' : '#324066'}" stroke-width="2"/>
+      <path d="M 55 70 Q 70 90 55 110 Q 75 110 85 90 Q 75 70 55 70 Z" fill="#1a2235" stroke="${fail === 'XOR' ? '#ff4d4f' : '#ffb020'}" stroke-width="2"/>
+      <line x1="85" y1="35" x2="150" y2="50" stroke="${(v[0] ^ v[1]) ? '#00d68f' : '#324066'}" stroke-width="2"/>
+      <line x1="85" y1="90" x2="150" y2="75" stroke="${(v[2] ^ v[3]) ? '#00d68f' : '#324066'}" stroke-width="2"/>
+      <path d="M 150 40 Q 165 65 150 90 Q 175 90 190 65 Q 175 40 150 40 Z" fill="#1a2235" stroke="${fail === 'XOR' ? '#ff4d4f' : '#ff4757'}" stroke-width="2"/>
+      <line x1="190" y1="65" x2="270" y2="65" stroke="${o ? '#00d68f' : '#324066'}" stroke-width="3"/>`,
+      },
+      semaforo: {
+        title: "🚦 Semáforo Inteligente (2 Variáveis)",
+        desc: "Decodificador de estado. (S1,S0): 00=VERMELHO, 01=VERDE, 10=AMARELO, 11=PEDESTRE.",
+        vars: ["S1", "S0"], outNames: ["R (Vermelho)"], exprSOP: "R = ¬(S1 ⊕ S0)  (XNOR)",
+        fn: (s1, s0) => (s1 === s0) ? 1 : 0, kmapType: "2V",
+        svg: (v, o, fail) => `
+      <line x1="30" y1="45" x2="110" y2="45" stroke="${v[0] ? '#00d68f' : '#324066'}" stroke-width="2"/>
+      <line x1="30" y1="85" x2="110" y2="85" stroke="${v[1] ? '#00d68f' : '#324066'}" stroke-width="2"/>
+      <path d="M 110 25 Q 135 65 110 105 Q 150 105 165 65 Q 150 25 110 25 Z" fill="#1a2235" stroke="${fail === 'XOR' ? '#ff4d4f' : '#3aa0ff'}" stroke-width="2"/>
+      <text x="123" y="69" fill="#fff" font-size="10" font-family="monospace">XNOR</text>
+      <line x1="165" y1="65" x2="270" y2="65" stroke="${o ? '#00d68f' : '#324066'}" stroke-width="3"/>
+      <circle cx="275" cy="65" r="6" fill="${o ? '#ff4d4f' : '#121826'}" stroke="#ff4d4f" stroke-width="1.5"/>`,
+      },
+      vendas: {
+        title: "🥤 Máquina de Vendas (3 Variáveis)",
+        desc: "Libera produto se Crédito Suficiente (C) E Seleção Feita (S) E Item em Estoque (E).",
+        vars: ["C", "S", "E"], outNames: ["Dispensar (D)"], exprSOP: "D = C · S · E",
+        fn: (c, s, e) => (c && s && e) ? 1 : 0, kmapType: "3V",
+        svg: (v, o, fail) => `
+      <line x1="20" y1="30" x2="120" y2="30" stroke="${v[0] ? '#00d68f' : '#324066'}" stroke-width="2"/>
+      <line x1="20" y1="65" x2="120" y2="65" stroke="${v[1] ? '#00d68f' : '#324066'}" stroke-width="2"/>
+      <line x1="20" y1="100" x2="120" y2="100" stroke="${v[2] ? '#00d68f' : '#324066'}" stroke-width="2"/>
+      <path d="M 120 15 L 165 15 A 50 50 0 0 1 165 115 L 120 115 Z" fill="#1a2235" stroke="${fail === 'AND' ? '#ff4d4f' : '#3aa0ff'}" stroke-width="2"/>
+      <text x="128" y="68" fill="#fff" font-size="10" font-family="monospace">AND3</text>
+      <line x1="215" y1="65" x2="270" y2="65" stroke="${o ? '#00d68f' : '#324066'}" stroke-width="3"/>`,
+      },
+      elevador: {
+        title: "🛗 Elevador (3 Variáveis)",
+        desc: "Motor ativo se Chamada (C) E Porta Fechada (F). D=direção (D=1 sobe, D=0 desce).",
+        vars: ["C", "F", "D"], outNames: ["Motor (M)"], exprSOP: "M = C · F",
+        fn: (c, f, d) => (c && f) ? 1 : 0, kmapType: "3V",
+        svg: (v, o, fail) => `
+      <line x1="20" y1="35" x2="120" y2="35" stroke="${v[0] ? '#00d68f' : '#324066'}" stroke-width="2"/>
+      <line x1="20" y1="65" x2="120" y2="65" stroke="${v[1] ? '#00d68f' : '#324066'}" stroke-width="2"/>
+      <line x1="20" y1="95" x2="120" y2="95" stroke="${v[2] ? '#00d68f' : '#324066'}" stroke-width="2" stroke-dasharray="4,3"/>
+      <path d="M 120 25 L 155 25 A 35 35 0 0 1 155 75 L 120 75 Z" fill="#1a2235" stroke="${fail === 'AND' ? '#ff4d4f' : '#b794f4'}" stroke-width="2"/>
+      <text x="130" y="54" fill="#fff" font-size="10" font-family="monospace">AND</text>
+      <line x1="190" y1="50" x2="270" y2="50" stroke="${o ? '#00d68f' : '#324066'}" stroke-width="3"/>
+      <text x="215" y="80" fill="#5a6683" font-size="8" font-family="monospace">D=direção</text>`,
+      }
+    };
+
+    /* ============================================================
+       GLOBAL STATE
+       ============================================================ */
+    let currentSysKey = "alarme";
+    let inputStates = [0, 0, 0, 0];
+    let clockRunning = true;
+    let uptimeSecs = 0;
+    let corruptedInputs = new Set();
+    let conversionStuckBit = -1;
+
+    const errors = {
+      parity: false, conversion: false, overflow: false, gateFail: null, clockJitter: false
+    };
+
+    const behavior = {
+      alarme: { latched: 0 },
+      acesso: { doorOpen: false },
+      irrigacao: { tank: 70, moisture: 60 },
+      paridade: { bits: [0, 0, 0, 0] },
+      semaforo: { auto: false, timer: 0 },
+      vendas: { saldo: 0, stock: { A: 5, B: 5, C: 3 }, lastMsg: "" },
+      elevador: { floor: 0, queue: [], doorOpen: false }
+    };
+
+    /* ============================================================
+       ALU (8-bit accumulator with CF/VF) — for overflow demo
+       ============================================================ */
+    const alu = { acc: 0, cf: 0, vf: 0, intendedCf: 0 };
+
+    function aluAdd(n) {
+      const old = alu.acc;
+      const sum = old + n;
+      const wrapped = (sum > 0xFF) || (sum < 0);
+      alu.intendedCf = wrapped ? 1 : 0;
+      const signOld = (old & 0x80) >> 7;
+      const signNew = ((sum & 0xFF) & 0x80) >> 7;
+      alu.vf = (signOld !== signNew) ? 1 : 0;
+      alu.cf = errors.overflow ? 0 : alu.intendedCf;
+      alu.acc = ((sum % 256) + 256) % 256;
+      renderAlu(old, n, wrapped);
+    }
+
+    function renderAlu(old, n, wrapped) {
+      const el = id => document.getElementById(id);
+      if (!el("aluAcc")) return;
+      el("aluAcc").textContent = "0x" + alu.acc.toString(16).toUpperCase().padStart(2, '0');
+      el("aluAccDec").textContent = alu.acc;
+      el("aluCF").textContent = alu.cf;
+      el("aluCF").className = "flag " + (
+        alu.cf ? "on" :
+          (wrapped && alu.intendedCf && errors.overflow) ? "missed" :
+            errors.overflow ? "bug" : ""
+      );
+      el("aluVF").textContent = alu.vf;
+      el("aluVF").className = "flag " + (alu.vf ? "on" : "");
+
+      const statusBadge = el("aluStatus");
+      if (errors.overflow) {
+        statusBadge.textContent = "⚠ Bug: CF nunca seta!";
+        statusBadge.className = "alu-badge bug";
+      } else {
+        statusBadge.textContent = "CF operacional";
+        statusBadge.className = "alu-badge";
+      }
+
+      if (old !== undefined) {
+        el("aluMsg").textContent = `op: 0x${old.toString(16).toUpperCase().padStart(2, '0')} ${n >= 0 ? '+' : '−'} 0x${Math.abs(n).toString(16).toUpperCase().padStart(2, '0')} → 0x${alu.acc.toString(16).toUpperCase().padStart(2, '0')}${wrapped ? ' · WRAP!' : ''}`;
+      }
+    }
+
+    function aluReset() {
+      alu.acc = 0; alu.cf = 0; alu.vf = 0; alu.intendedCf = 0;
+      renderAlu();
+      if (document.getElementById("aluMsg")) document.getElementById("aluMsg").textContent = "reset";
+    }
+
+    function aluAutoTest() {
+      alu.acc = 0xF0;
+      autoSimLog("🔬", `Auto Test: ACC=0xF0, 20 operações de +16`);
+      let wraps = 0, missed = 0;
+      for (let i = 0; i < 20; i++) {
+        const before = alu.acc;
+        aluAdd(16);
+        if (before + 16 > 0xFF) {
+          wraps++;
+          if (alu.cf === 0) missed++;
+        }
+      }
+      autoSimStats.overflowEvents += wraps;
+      autoSimStats.overflowDetected += (wraps - missed);
+      autoSimLog("📊", `Auto Test: ${wraps} wraps, ${missed} NÃO detectados (CF=0)`);
+      renderAutoSimStats();
+    }
+
+    /* ============================================================
+       AUTO / MANUAL SIM STATE
+       ============================================================ */
+    const autoSim = {
+      running: false, paused: false, timer: null,
+      mode: "stress", speedMs: 500,
+      step: 0, sweepPos: 0, scenarioIdx: 0, scenarioStep: 0,
+      enabledErrors: { parity: true, conversion: true, overflow: true, gateFail: true, clockJitter: true },
+      log: []
+    };
+
+    const autoSimStats = {
+      cycles: 0,
+      combosSeen: new Set(),
+      discrepancies: 0,
+      parityInjected: 0,
+      parityDetected: 0,
+      overflowEvents: 0,
+      overflowDetected: 0,
+      gateFailInjected: 0,
+      gateFailDetected: 0,
+      jitterEvents: 0,
+      sweeps: 0
+    };
+
+    const DIAG_SCENARIOS = [
+      { name: "Paridade", err: "parity", dur: 8 },
+      { name: "Conversão", err: "conversion", dur: 8 },
+      { name: "Overflow", err: "overflow", dur: 8 },
+      { name: "Gate Fail", err: "gateFail", dur: 8 },
+      { name: "Clock Jitter", err: "clockJitter", dur: 8 }
+    ];
+
+    /* ============================================================
+       UTILITIES
+       ============================================================ */
+    function log(type, msg) {
+      const c = document.getElementById("console");
+      if (!c) return;
+      const t = new Date().toLocaleTimeString('pt-BR');
+      const line = document.createElement("div");
+      line.className = "line";
+      line.innerHTML = `<span class="ts">[${t}]</span><span class="${type}">${msg}</span>`;
+      c.appendChild(line);
+      c.scrollTop = c.scrollHeight;
+      while (c.children.length > 80) c.removeChild(c.firstChild);
+    }
+
+    function autoSimLog(icon, msg) {
+      const t = new Date().toLocaleTimeString('pt-BR');
+      autoSim.log.unshift(`[${t}] ${icon} ${msg}`);
+      if (autoSim.log.length > 25) autoSim.log.pop();
+      const el = document.getElementById("autosimLog");
+      if (el) {
+        el.innerHTML = autoSim.log.map(l => `<div class="line">${l}</div>`).join("");
+      }
+    }
+
+    function applyGateErrors(correctOut) {
+      if (!errors.gateFail) return correctOut;
+      if (errors.gateFail === 'AND') return correctOut === 1 ? 0 : correctOut;
+      if (errors.gateFail === 'OR') return correctOut === 0 ? 1 : correctOut;
+      if (errors.gateFail === 'XOR') return correctOut ? 0 : 1;
+      return correctOut;
+    }
+
+    function countActiveErrors() {
+      let n = 0;
+      if (errors.parity) n++;
+      if (errors.conversion) n++;
+      if (errors.overflow) n++;
+      if (errors.gateFail) n++;
+      if (errors.clockJitter) n++;
+      return n;
+    }
+
+    function updateErrorBadge() {
+      const n = countActiveErrors();
+      const p = document.getElementById("pillErrors");
+      p.style.display = n > 0 ? "inline-flex" : "none";
+      document.getElementById("pillErrorCount").textContent = n;
+    }
+
+    function updateErrorCardsUI() {
+      document.querySelectorAll(".error-card").forEach(card => {
+        const err = card.dataset.error;
+        if (err === "gateFail") card.classList.toggle("active", !!errors.gateFail);
+        else card.classList.toggle("active", !!errors[err]);
+      });
+      document.querySelectorAll(".gf-btn").forEach(b => {
+        b.classList.toggle("active", b.dataset.gate === errors.gateFail);
+      });
+      updateErrorBadge();
+    }
+
+    /* ============================================================
+       RENDERERS
+       ============================================================ */
+    function renderInputs() {
+      const sys = projects[currentSysKey];
+      const c = document.getElementById("inputsContainer");
+      c.innerHTML = "";
+      sys.vars.forEach((vName, idx) => {
+        const row = document.createElement("div");
+        const isCorrupt = corruptedInputs.has(idx);
+        row.className = `input-row ${inputStates[idx] ? 'active' : ''} ${isCorrupt ? 'corrupted' : ''}`;
+        row.innerHTML = `
+      <div class="flex items-center gap-3">
+        <div class="bit">${vName}</div>
+        <span class="text-xs font-semibold text-[var(--txt-2)]">${vName}${isCorrupt ? ' ⚠' : ''}</span>
+      </div>
+      <div class="toggle"></div>`;
+        row.addEventListener("click", () => {
+          inputStates[idx] = inputStates[idx] ? 0 : 1;
+          corruptedInputs.delete(idx);
+          log("info", `${vName} → ${inputStates[idx]}`);
+          renderInputs(); updateState();
+        });
+        c.appendChild(row);
+      });
+    }
+
+    function renderTruthTable() {
+      const sys = projects[currentSysKey];
+      const t = document.getElementById("truthTable");
+      const n = sys.vars.length, total = Math.pow(2, n);
+      let html = "<thead><tr>";
+      sys.vars.forEach(v => html += `<th>${v}</th>`);
+      html += `<th style="color:var(--ok-2)">${sys.outNames[0]}</th></tr></thead><tbody>`;
+      for (let i = 0; i < total; i++) {
+        const bits = i.toString(2).padStart(n, '0').split('').map(Number);
+        const out = sys.fn(...bits);
+        html += `<tr id="tt-${i}">`;
+        bits.forEach(b => html += `<td>${b}</td>`);
+        html += `<td class="font-bold ${out ? 'text-[var(--ok-2)]' : 'text-[var(--txt-4)]'}">${out}</td></tr>`;
+      }
+      html += "</tbody>";
+      t.innerHTML = html;
+    }
+
+    function renderKMap() {
+      const sys = projects[currentSysKey];
+      const c = document.getElementById("kmapContainer");
+      if (sys.kmapType === "2V") {
+        c.innerHTML = `<div class="kmap-grid" style="grid-template-columns:repeat(3,1fr)">
+      <div class="kmap-header">${sys.vars[0]}\\${sys.vars[1]}</div>
+      <div class="kmap-header">0</div><div class="kmap-header">1</div>
+      <div class="kmap-header">0</div>
+      <div class="kmap-cell" id="kcell-00"></div><div class="kmap-cell" id="kcell-01"></div>
+      <div class="kmap-header">1</div>
+      <div class="kmap-cell" id="kcell-10"></div><div class="kmap-cell" id="kcell-11"></div></div>`;
+      } else if (sys.kmapType === "3V") {
+        c.innerHTML = `<div class="kmap-grid" style="grid-template-columns:repeat(5,1fr)">
+      <div class="kmap-header">${sys.vars[0]}\\${sys.vars[1]}${sys.vars[2]}</div>
+      <div class="kmap-header">00</div><div class="kmap-header">01</div>
+      <div class="kmap-header">11</div><div class="kmap-header">10</div>
+      <div class="kmap-header">0</div>
+      <div class="kmap-cell" id="kcell-000"></div><div class="kmap-cell" id="kcell-001"></div>
+      <div class="kmap-cell" id="kcell-011"></div><div class="kmap-cell" id="kcell-010"></div>
+      <div class="kmap-header">1</div>
+      <div class="kmap-cell" id="kcell-100"></div><div class="kmap-cell" id="kcell-101"></div>
+      <div class="kmap-cell" id="kcell-111"></div><div class="kmap-cell" id="kcell-110"></div></div>`;
+      } else {
+        c.innerHTML = `<div class="kmap-grid" style="grid-template-columns:repeat(5,1fr)">
+      <div class="kmap-header">${sys.vars[0]}${sys.vars[1]}\\${sys.vars[2]}${sys.vars[3]}</div>
+      <div class="kmap-header">00</div><div class="kmap-header">01</div>
+      <div class="kmap-header">11</div><div class="kmap-header">10</div>
+      <div class="kmap-header">00</div>
+      <div class="kmap-cell" id="kcell-0000"></div><div class="kmap-cell" id="kcell-0001"></div>
+      <div class="kmap-cell" id="kcell-0011"></div><div class="kmap-cell" id="kcell-0010"></div>
+      <div class="kmap-header">01</div>
+      <div class="kmap-cell" id="kcell-0100"></div><div class="kmap-cell" id="kcell-0101"></div>
+      <div class="kmap-cell" id="kcell-0111"></div><div class="kmap-cell" id="kcell-0110"></div>
+      <div class="kmap-header">11</div>
+      <div class="kmap-cell" id="kcell-1100"></div><div class="kmap-cell" id="kcell-1101"></div>
+      <div class="kmap-cell" id="kcell-1111"></div><div class="kmap-cell" id="kcell-1110"></div>
+      <div class="kmap-header">10</div>
+      <div class="kmap-cell" id="kcell-1000"></div><div class="kmap-cell" id="kcell-1001"></div>
+      <div class="kmap-cell" id="kcell-1011"></div><div class="kmap-cell" id="kcell-1010"></div></div>`;
+      }
+      document.querySelectorAll(".kmap-cell").forEach(cell => {
+        const id = cell.id.replace("kcell-", "");
+        const bits = id.split("").map(Number);
+        const val = sys.fn(...bits);
+        cell.textContent = val;
+        cell.classList.toggle("one", val === 1);
+      });
+    }
+
+    /* ============================================================
+       BEHAVIOR PANELS
+       ============================================================ */
+    function getBehaviorHTML(key) {
+      const b = behavior[key];
+      const correctOut = projects[key].fn(...inputStates);
+      const actualOut = applyGateErrors(correctOut);
+      const discrepancy = correctOut !== actualOut;
+      const discBadge = discrepancy ? '<span class="discrepancy">⚠ SAÍDA DIVERGE DA SPEC</span>' : '';
+
+      const templates = {
+        alarme: () => {
+          const sensors = inputStates[1] | inputStates[2] | inputStates[3];
+          const armed = inputStates[0];
+          if (armed && sensors && !b.latched) { b.latched = 1; log("warn", "🚨 LATCH disparado · sirene travada"); }
+          const siren = b.latched;
+          return `<div class="behavior-panel"><h3>🚨 Alarme Residencial ${discBadge}</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+          <div><div class="led ${armed ? 'on warn' : ''}">${armed}</div><div class="text-xs font-bold text-[var(--txt-3)]">ARMADO</div></div>
+          <div><div class="led ${sensors ? 'on err' : ''}">${sensors}</div><div class="text-xs font-bold text-[var(--txt-3)]">SENSORES</div></div>
+          <div><div class="led ${siren ? 'on err' : ''}">${siren}</div><div class="text-xs font-bold text-[var(--txt-3)]">SIRENE</div></div>
+          <div><button class="btn err" id="almReset">🔕 Reset</button>
+            <div class="text-[10px] text-[var(--txt-3)] mt-1">Latch: ${b.latched ? 'TRAVADO' : 'livre'}</div></div>
+        </div></div>`;
+        },
+        acesso: () => `<div class="behavior-panel"><h3>🔐 Controle de Acesso ${discBadge}</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+        <div><div class="door-display ${b.doorOpen ? 'open' : ''}">${b.doorOpen ? '🔓' : '🔒'}</div>
+          <div class="text-center text-xs text-[var(--txt-3)] mt-2">${b.doorOpen ? 'ABERTA' : 'FECHADA'}</div></div>
+        <div><div class="text-xs text-[var(--txt-3)] mb-2">Senha (correta: <span class="mono text-[var(--ok-2)]">1234</span>)</div>
+          <input type="password" class="pwd-input" id="accPwd" maxlength="4" placeholder="••••"></div>
+        <div><button class="btn primary w-full" id="accEnter" style="justify-content:center">🔓 Tentar</button>
+          <div class="text-[10px] text-[var(--txt-3)] mt-2 text-center">Cartão: ${inputStates[0] ? '✓' : '✗'} · Senha: ${inputStates[1] ? '✓' : '✗'}</div></div>
+      </div></div>`,
+        irrigacao: () => {
+          const pump = actualOut === 1 && b.tank > 0;
+          const tankLow = b.tank < 20;
+          return `<div class="behavior-panel"><h3>💧 Irrigação ${discBadge}</h3>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+          <div><div class="tank-label">Reservatório</div>
+            <div class="tank ${tankLow ? 'low' : ''}"><div class="tank-fill" style="height:${b.tank}%"></div></div>
+            <div class="tank-pct">${Math.round(b.tank)}% ${tankLow ? '⚠' : ''}</div></div>
+          <div class="text-center"><div class="text-4xl mb-2">${pump ? '💦' : '🌱'}</div>
+            <div class="text-xs font-bold ${pump ? 'text-[var(--ok-2)]' : 'text-[var(--txt-3)]'}">BOMBA: ${pump ? 'ON' : 'OFF'}</div></div>
+          <div><div class="soil-label">Umidade</div>
+            <div class="soil"><div class="soil-fill"></div><div class="soil-moisture" style="height:${b.moisture}%"></div></div>
+            <div class="soil-pct">${Math.round(b.moisture)}%</div></div>
+          <div class="text-center"><button class="btn primary w-full" id="irrRefill">🔄 Reabastecer</button>
+            <div class="text-[10px] text-[var(--txt-3)] mt-1">Enche o tanque</div></div>
+        </div></div>`;
+        },
+        paridade: () => {
+          const bits = b.bits;
+          const ones = bits.reduce((a, c) => a + c, 0);
+          return `<div class="behavior-panel"><h3>🔢 Paridade 4 bits ${discBadge}</h3>
+        <div class="flex gap-3 justify-center mb-4">${bits.map((bit, i) => `<button class="bit-btn ${bit ? 'on' : ''}" data-bit="${i}">${bit}</button>`).join('')}</div>
+        <div class="grid grid-cols-3 gap-4 text-center">
+          <div><div class="text-xs text-[var(--txt-3)] uppercase mb-1">Byte</div>
+            <div class="mono text-lg font-extrabold text-[var(--accent-2)]">0x${bits.reduce((a, c, i) => a + (c << (3 - i)), 0).toString(16).toUpperCase()}</div></div>
+          <div><div class="text-xs text-[var(--txt-3)] uppercase mb-1">1s</div>
+            <div class="mono text-lg font-extrabold text-[var(--warn-2)]">${ones}</div></div>
+          <div><div class="text-xs text-[var(--txt-3)] uppercase mb-1">Paridade</div>
+            <div class="mono text-lg font-extrabold ${ones % 2 ? 'text-[var(--err)]' : 'text-[var(--ok-2)]'}">${ones % 2}</div></div>
+        </div></div>`;
+        },
+        semaforo: () => {
+          const state = inputStates[0] * 2 + inputStates[1];
+          const names = ["VERMELHO", "VERDE", "AMARELO", "PEDESTRE"];
+          const car = { r: state === 0 || state === 3, y: state === 2, g: state === 1 };
+          const ped = { r: state !== 3, g: state === 3 };
+          return `<div class="behavior-panel"><h3>🚦 Semáforo ${discBadge}</h3>
+        <div class="flex justify-center gap-8 py-3">
+          <div class="text-center"><div class="text-[10px] text-[var(--txt-3)] uppercase mb-2">Veículos</div>
+            <div class="semaphore"><div class="lamp red ${car.r ? 'on' : ''}"></div><div class="lamp yellow ${car.y ? 'on' : ''}"></div><div class="lamp green ${car.g ? 'on' : ''}"></div></div></div>
+          <div class="text-center"><div class="text-[10px] text-[var(--txt-3)] uppercase mb-2">Pedestres</div>
+            <div class="semaphore"><div class="lamp red ${ped.r ? 'on' : ''}"></div><div class="lamp green ${ped.g ? 'on' : ''}"></div></div></div>
+        </div>
+        <div class="text-center mb-3"><span class="text-xs text-[var(--txt-3)]">Estado: </span>
+          <strong class="text-sm text-[var(--warn-2)]">${names[state]}</strong>
+          <span class="text-xs text-[var(--txt-4)] ml-2">(${state.toString(2).padStart(2, '0')})</span></div>
+        <div class="flex gap-2 justify-center">
+          <button class="btn primary" id="semNext">⏭ Avançar</button>
+          <button class="btn ${b.auto ? 'ok' : ''}" id="semAuto">${b.auto ? '⏸ Pausar' : '▶ Auto'}</button>
+          <button class="btn err" id="semReset">↺ Reset</button>
+        </div></div>`;
+        },
+        vendas: () => {
+          const prods = [{ id: 'A', name: 'Refrigerante', price: 150 }, { id: 'B', name: 'Água', price: 100 }, { id: 'C', name: 'Suco', price: 200 }];
+          return `<div class="behavior-panel"><h3>🥤 Máquina de Vendas ${discBadge}</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div><div class="money-display"><div class="label">Saldo</div>
+            <div class="value ${b.saldo > 0 ? '' : 'err'}">R$ ${(b.saldo / 100).toFixed(2).replace('.', ',')}</div></div>
+            <div class="flex gap-2 mb-3">
+              <button class="coin-btn" data-coin="25">+25¢</button>
+              <button class="coin-btn" data-coin="50">+50¢</button>
+              <button class="coin-btn" data-coin="100">+R$1</button></div>
+            <div class="text-xs text-[var(--txt-3)] text-center mb-2">${b.lastMsg || 'Insira uma moeda'}</div>
+            <div class="flex gap-2">
+              <button class="btn err flex-1" id="vmCancel" style="justify-content:center">↺ Devolver</button>
+              <button class="btn ok flex-1" id="vmRestock" style="justify-content:center">📦 Reabastecer</button></div></div>
+          <div class="grid grid-cols-1 gap-2">
+            ${prods.map(p => `<button class="product-btn" data-product="${p.id}" ${b.stock[p.id] === 0 ? 'disabled' : ''}>
+              <strong>${p.id}</strong> · ${p.name} · R$ ${(p.price / 100).toFixed(2).replace('.', ',')}
+              <span class="text-[10px] text-[var(--txt-4)] block">estoque: ${b.stock[p.id]}</span></button>`).join('')}
+          </div></div></div>`;
+        },
+        elevador: () => {
+          const floor = b.floor;
+          const doorIcon = b.doorOpen ? '🚪' : '🔒';
+          const dirIcon = b.queue.length === 0 ? '●' : (b.queue[0] > floor ? '▲' : b.queue[0] < floor ? '▼' : '●');
+          return `<div class="behavior-panel"><h3>🛗 Elevador ${discBadge}</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
+          <div class="text-center">
+            <div class="elevator-shaft"><div class="elevator-car" style="bottom:${8 + floor * 48}px">${floor}</div></div>
+            <div class="text-xs text-[var(--txt-3)] mt-2">Andar: <strong class="text-[var(--info-2)]">${floor}</strong></div></div>
+          <div class="text-center"><div class="text-4xl mb-2">${dirIcon}</div>
+            <div class="text-xs text-[var(--txt-3)]">Direção</div>
+            <div class="text-lg font-bold">${doorIcon}</div>
+            <div class="text-[10px] text-[var(--txt-3)]">Porta ${b.doorOpen ? 'ABERTA' : 'FECHADA'}</div>
+            <div class="text-[10px] text-[var(--txt-3)] mt-1">Fila: ${b.queue.length > 0 ? b.queue.join(' → ') : 'vazia'}</div></div>
+          <div><div class="text-[10px] text-[var(--txt-3)] uppercase mb-2">Chamar andar</div>
+            <div class="grid grid-cols-2 gap-2">${[3, 2, 1, 0].map(f => `<button class="floor-btn ${f === floor ? 'current' : ''}" data-floor="${f}">${f}${f === 0 ? ' (T)' : ''}</button>`).join('')}</div>
+            <button class="btn err w-full mt-2" id="elevReset" style="justify-content:center">↺ Reset</button></div>
+        </div></div>`;
+        }
+      };
+      return templates[key]();
+    }
+
+    function renderBehavior() {
+      document.getElementById("behaviorPanel").innerHTML = getBehaviorHTML(currentSysKey);
+      attachBehaviorHandlers();
+    }
+
+    /* ============================================================
+       UPDATE STATE
+       ============================================================ */
+    function updateState() {
+      const sys = projects[currentSysKey];
+      const correctOut = sys.fn(...inputStates);
+      const actualOut = applyGateErrors(correctOut);
+      const discrepancy = correctOut !== actualOut;
+
+      const binStr = inputStates.join("");
+      const hexVal = parseInt(binStr, 2) || 0;
+      const ones = inputStates.reduce((a, c) => a + c, 0);
+
+      document.getElementById("auxBin").textContent = binStr;
+      document.getElementById("auxHex").textContent = "0x" + hexVal.toString(16).toUpperCase();
+
+      let decVal = hexVal;
+      if (errors.conversion && conversionStuckBit >= 0) {
+        decVal = hexVal ^ (1 << conversionStuckBit);
+      }
+      const decEl = document.getElementById("auxDec");
+      decEl.textContent = decVal;
+      decEl.className = "val " + (errors.conversion ? "err" : "");
+
+      const parityEl = document.getElementById("auxParity");
+      if (corruptedInputs.size > 0) {
+        parityEl.textContent = "FAIL";
+        parityEl.className = "val err";
+      } else if (errors.parity) {
+        parityEl.textContent = ones % 2 === 0 ? "OK" : "PAR";
+        parityEl.className = "val " + (ones % 2 === 0 ? "ok" : "");
+      } else {
+        parityEl.textContent = "OK";
+        parityEl.className = "val ok";
+      }
+
+      document.getElementById("outputsContainer").innerHTML = `
+    <div class="p-3 bg-[var(--panel-3)] rounded border ${discrepancy ? 'border-[var(--err)]' : 'border-[var(--border)]'}">
+      <div class="led ${actualOut ? 'on ok' : ''}">${actualOut}</div>
+      <div class="text-[10px] font-bold text-[var(--txt-3)] uppercase">${sys.outNames[0]}</div>
+      ${discrepancy ? `<div class="text-[9px] text-[var(--err)] mt-1">spec=${correctOut} · real=${actualOut}</div>` : ''}
+    </div>`;
+
+      document.getElementById("gateSvg").innerHTML = sys.svg(inputStates, actualOut, errors.gateFail);
+      document.getElementById("gateActiveText").textContent = actualOut;
+      const failWarn = document.getElementById("gateFailWarning");
+      if (errors.gateFail) {
+        failWarn.style.display = "inline";
+        document.getElementById("gateFailName").textContent = errors.gateFail;
+      } else {
+        failWarn.style.display = "none";
+      }
+
+      const idx = parseInt(binStr.padEnd(sys.vars.length, "0").slice(0, sys.vars.length), 2);
+      document.querySelectorAll("[id^=tt-]").forEach(row => row.classList.remove("active-row"));
+      const active = document.getElementById("tt-" + idx);
+      if (active) active.classList.add("active-row");
+
+      document.querySelectorAll(".kmap-cell").forEach(c => c.classList.remove("active-cell"));
+      const cell = document.getElementById("kcell-" + binStr);
+      if (cell) cell.classList.add("active-cell");
+
+      renderBehavior();
+    }
+
+    /* ============================================================
+       BEHAVIOR HANDLERS
+       ============================================================ */
+    function attachBehaviorHandlers() {
+      const key = currentSysKey, b = behavior[key];
+
+      if (key === "alarme") {
+        document.getElementById("almReset")?.addEventListener("click", () => {
+          b.latched = 0; log("ok", "🔕 Alarme resetado"); renderBehavior();
+        });
+      }
+      if (key === "acesso") {
+        document.getElementById("accEnter")?.addEventListener("click", () => {
+          const pwd = document.getElementById("accPwd").value;
+          inputStates[1] = (pwd === "1234") ? 1 : 0;
+          const correct = projects.acesso.fn(...inputStates);
+          const actual = applyGateErrors(correct);
+          if (actual === 1) {
+            b.doorOpen = true;
+            log("ok", `✓ Acesso autorizado`);
+            setTimeout(() => { b.doorOpen = false; renderBehavior(); }, 2500);
+          } else {
+            b.doorOpen = false;
+            log("err", `✗ Acesso negado`);
+          }
+          renderInputs(); renderBehavior(); updateState();
+        });
+      }
+      if (key === "irrigacao") {
+        document.getElementById("irrRefill")?.addEventListener("click", () => {
+          b.tank = 100; log("ok", "💧 Reservatório reabastecido"); renderBehavior();
+        });
+      }
+      if (key === "paridade") {
+        document.querySelectorAll(".bit-btn").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const i = parseInt(btn.dataset.bit);
+            b.bits[i] = b.bits[i] ? 0 : 1;
+            inputStates[i] = b.bits[i];
+            renderBehavior(); renderInputs(); updateState();
+          });
+        });
+      }
+      if (key === "semaforo") {
+        document.getElementById("semNext")?.addEventListener("click", () => {
+          const state = (inputStates[0] * 2 + inputStates[1] + 1) % 4;
+          inputStates[0] = (state >> 1) & 1; inputStates[1] = state & 1;
+          log("info", `Semáforo → estado ${state}`); renderInputs(); updateState();
+        });
+        document.getElementById("semAuto")?.addEventListener("click", () => {
+          b.auto = !b.auto; log("info", b.auto ? "▶ Auto ativado" : "⏸ Auto pausado"); renderBehavior();
+        });
+        document.getElementById("semReset")?.addEventListener("click", () => {
+          inputStates[0] = 0; inputStates[1] = 0; b.auto = false; b.timer = 0;
+          log("warn", "Semáforo resetado"); renderInputs(); updateState();
+        });
+      }
+      if (key === "vendas") {
+        document.querySelectorAll(".coin-btn").forEach(btn => {
+          btn.addEventListener("click", () => {
+            b.saldo += parseInt(btn.dataset.coin);
+            b.lastMsg = `+ R$ ${(parseInt(btn.dataset.coin) / 100).toFixed(2).replace('.', ',')}`;
+            log("ok", `Moeda: +R$ ${(parseInt(btn.dataset.coin) / 100).toFixed(2)}`); renderBehavior();
+          });
+        });
+        document.querySelectorAll(".product-btn").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const id = btn.dataset.product;
+            const prices = { A: 150, B: 100, C: 200 }, names = { A: "Refrigerante", B: "Água", C: "Suco" };
+            if (b.stock[id] === 0) { b.lastMsg = "Esgotado!"; log("err", "Esgotado"); renderBehavior(); return; }
+            if (b.saldo < prices[id]) { b.lastMsg = `Faltam R$ ${((prices[id] - b.saldo) / 100).toFixed(2).replace('.', ',')}`; renderBehavior(); return; }
+            b.saldo -= prices[id]; b.stock[id]--;
+            b.lastMsg = `✓ ${names[id]} liberado!`;
+            log("ok", `✓ ${names[id]} entregue`); renderBehavior();
+          });
+        });
+        document.getElementById("vmCancel")?.addEventListener("click", () => {
+          if (b.saldo > 0) log("warn", `Devolvido R$ ${(b.saldo / 100).toFixed(2)}`);
+          b.saldo = 0; b.lastMsg = "Cancelado"; renderBehavior();
+        });
+        document.getElementById("vmRestock")?.addEventListener("click", () => {
+          b.stock = { A: 5, B: 5, C: 3 }; b.lastMsg = "Reabastecido"; log("ok", "📦 Estoque"); renderBehavior();
+        });
+      }
+      if (key === "elevador") {
+        document.querySelectorAll(".floor-btn").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const f = parseInt(btn.dataset.floor);
+            if (!b.queue.includes(f) && f !== b.floor) { b.queue.push(f); log("info", `Chamada: ${f}`); }
+            else if (f === b.floor) { b.doorOpen = true; setTimeout(() => { b.doorOpen = false; renderBehavior(); }, 2000); }
+            renderBehavior();
+          });
+        });
+        document.getElementById("elevReset")?.addEventListener("click", () => {
+          b.floor = 0; b.queue = []; b.doorOpen = false; log("warn", "Elevador resetado"); renderBehavior();
+        });
+      }
+    }
+
+    /* ============================================================
+       AUTO / MANUAL SIMULATION ENGINE
+       ============================================================ */
+    function renderAutoSimStats() {
+      const sys = projects[currentSysKey];
+      const n = sys.vars.length;
+      const total = 1 << n;
+      const set = id => document.getElementById(id);
+      if (!set("asCycles")) return;
+      set("asCycles").textContent = autoSimStats.cycles;
+      set("asCoverage").textContent = `${autoSimStats.combosSeen.size}/${total}`;
+      set("asDisc").textContent = autoSimStats.discrepancies;
+      const rate = autoSimStats.cycles > 0 ? (autoSimStats.discrepancies / autoSimStats.cycles * 100).toFixed(1) : "0.0";
+      set("asRate").textContent = rate + "%";
+      set("asParity").textContent = autoSimStats.parityInjected;
+      set("asOverflow").textContent = `${autoSimStats.overflowDetected}/${autoSimStats.overflowEvents}`;
+      set("asGate").textContent = autoSimStats.gateFailInjected;
+      set("asJitter").textContent = autoSimStats.jitterEvents;
+
+      if (autoSim.mode === "diagnostic") {
+        const sc = DIAG_SCENARIOS[autoSim.scenarioIdx];
+        set("autosimScenario").textContent = `${sc.name} (${autoSim.scenarioStep + 1}/${sc.dur})`;
+      } else {
+        set("autosimScenario").textContent = autoSim.mode === "sweep" ? "Sweep" : "Stress";
+      }
+    }
+
+    function autoSimStep(isManual = false) {
+      if (!autoSim.running && !isManual) return;
+      if (autoSim.paused && !isManual) return;
+
+      autoSim.step++;
+      autoSimStats.cycles++;
+
+      const sys = projects[currentSysKey];
+      const n = sys.vars.length;
+      const total = 1 << n;
+
+      corruptedInputs.clear();
+
+      if (autoSim.mode === "sweep") {
+        autoSim.sweepPos = (autoSim.sweepPos + 1) % total;
+        if (autoSim.sweepPos === 0) autoSimStats.sweeps++;
+        for (let i = 0; i < n; i++) inputStates[i] = (autoSim.sweepPos >> (n - 1 - i)) & 1;
+
+        errors.parity = false; errors.conversion = false; errors.overflow = false;
+        errors.gateFail = null; errors.clockJitter = false;
+        conversionStuckBit = -1;
+        updateErrorCardsUI();
+      } else if (autoSim.mode === "stress") {
+        for (let i = 0; i < n; i++) inputStates[i] = Math.random() < 0.5 ? 1 : 0;
+
+        Object.keys(autoSim.enabledErrors).forEach(k => {
+          if (!autoSim.enabledErrors[k]) { if (k === "gateFail") errors.gateFail = null; else errors[k] = false; return; }
+          if (Math.random() < 0.35) {
+            if (k === "gateFail") errors.gateFail = ["AND", "OR", "XOR"][Math.floor(Math.random() * 3)];
+            else errors[k] = true;
+            if (k === "conversion" && conversionStuckBit < 0) conversionStuckBit = Math.floor(Math.random() * n);
+          } else {
+            if (k === "gateFail") errors.gateFail = null;
+            else errors[k] = false;
+            if (k === "conversion") conversionStuckBit = -1;
+          }
+        });
+        updateErrorCardsUI();
+      } else { // diagnostic
+        const sc = DIAG_SCENARIOS[autoSim.scenarioIdx];
+
+        errors.parity = false; errors.conversion = false; errors.overflow = false;
+        errors.gateFail = null; errors.clockJitter = false;
+        conversionStuckBit = -1;
+
+        if (sc.err === "gateFail") errors.gateFail = "AND";
+        else errors[sc.err] = true;
+        if (sc.err === "conversion") conversionStuckBit = 1;
+        updateErrorCardsUI();
+
+        for (let i = 0; i < n; i++) inputStates[i] = Math.random() < 0.5 ? 1 : 0;
+
+        autoSim.scenarioStep++;
+        if (autoSim.scenarioStep >= sc.dur) {
+          autoSim.scenarioStep = 0;
+          autoSim.scenarioIdx = (autoSim.scenarioIdx + 1) % DIAG_SCENARIOS.length;
+        }
+      }
+
+      autoSimStats.combosSeen.add(inputStates.slice(0, n).join(""));
+
+      if (errors.parity && Math.random() < 0.4) {
+        const i = Math.floor(Math.random() * n);
+        inputStates[i] ^= 1;
+        corruptedInputs.add(i);
+        autoSimStats.parityInjected++;
+        autoSimStats.parityDetected++;
+        autoSimLog("🔀", `Parity flip bit ${sys.vars[i]} · detectado`);
+      }
+
+      if (errors.overflow) {
+        const ops = [1, -1, 0x0F, 0xF0];
+        aluAdd(ops[autoSim.step % 4]);
+      }
+
+      const correctOut = sys.fn(...inputStates);
+      const actualOut = applyGateErrors(correctOut);
+      const disc = correctOut !== actualOut;
+      if (disc) {
+        autoSimStats.discrepancies++;
+        if (errors.gateFail) {
+          autoSimStats.gateFailInjected++;
+          autoSimStats.gateFailDetected++;
+          autoSimLog("⚠", `Discrepância: spec=${correctOut} real=${actualOut} (gate ${errors.gateFail})`);
+        }
+      }
+
+      if (errors.clockJitter && Math.random() < 0.4) {
+        autoSimStats.jitterEvents++;
+        if (autoSimStats.jitterEvents % 3 === 0) {
+          autoSimLog("🕐", `Clock jitter: ${autoSimStats.jitterEvents} ciclos perdidos`);
+        }
+      }
+
+      if (isManual) {
+        autoSimLog("⏭", `Passo manual executado (${autoSim.mode})`);
+        log("info", `⏭ Execução manual (passo ${autoSimStats.cycles})`);
+      }
+
+      renderInputs();
+      updateState();
+      renderAutoSimStats();
+    }
+
+    function manualSimStep() {
+      if (!autoSim.sessionStart) {
+        autoSim.sessionStart = new Date();
+        autoSim.sessionEnd = null;
+      }
+      autoSim.mode = document.getElementById("autosimMode").value;
+      autoSimStep(true);
+      if (!autoSim.running) {
+        updateAutoSimUI("manual");
+      }
+    }
+
+    function startAutoSim() {
+      if (autoSim.running && !autoSim.paused) return;
+      if (!autoSim.sessionStart) {
+        autoSim.sessionStart = new Date();
+        autoSim.sessionEnd = null;
+      }
+      if (autoSim.paused) {
+        autoSim.paused = false;
+        autoSim.timer = setInterval(() => autoSimStep(false), autoSim.speedMs);
+        updateAutoSimUI("running");
+        autoSimLog("▶", "Simulação retomada");
+        return;
+      }
+      autoSim.running = true;
+      autoSim.paused = false;
+      autoSim.step = 0;
+      autoSim.sweepPos = -1;
+      autoSim.scenarioIdx = 0;
+      autoSim.scenarioStep = 0;
+
+      autoSimStats.cycles = 0;
+      autoSimStats.combosSeen = new Set();
+      autoSimStats.discrepancies = 0;
+      autoSimStats.parityInjected = 0;
+      autoSimStats.parityDetected = 0;
+      autoSimStats.overflowEvents = 0;
+      autoSimStats.overflowDetected = 0;
+      autoSimStats.gateFailInjected = 0;
+      autoSimStats.gateFailDetected = 0;
+      autoSimStats.jitterEvents = 0;
+      autoSimStats.sweeps = 0;
+      autoSim.log = [];
+      autoSimLog("▶", `Iniciando modo "${autoSim.mode}" (${autoSim.speedMs}ms/ciclo)`);
+      autoSim.timer = setInterval(() => autoSimStep(false), autoSim.speedMs);
+      updateAutoSimUI("running");
+      log("info", `🤖 Auto-sim iniciada: ${autoSim.mode}`);
+    }
+
+    function pauseAutoSim() {
+      if (!autoSim.running || autoSim.paused) return;
+      autoSim.paused = true;
+      clearInterval(autoSim.timer);
+      autoSim.timer = null;
+      updateAutoSimUI("paused");
+      autoSimLog("⏸", "Simulação pausada");
+      log("warn", "🤖 Auto-sim pausada");
+    }
+
+    function stopAutoSim() {
+      autoSim.running = false;
+      autoSim.paused = false;
+      if (autoSim.timer) clearInterval(autoSim.timer);
+      autoSim.timer = null;
+      autoSim.sessionEnd = new Date();
+      updateAutoSimUI("stopped");
+      autoSimLog("⏹", "Simulação parada · stats preservadas");
+      log("warn", "🤖 Auto-sim parada");
+    }
+
+    function updateAutoSimUI(state) {
+      const pill = document.getElementById("autosimStatus");
+      const start = document.getElementById("autosimStart");
+      const pause = document.getElementById("autosimPause");
+      const stop = document.getElementById("autosimStop");
+      const stepBtn = document.getElementById("autosimStepBtn");
+
+      if (state === "running") {
+        pill.textContent = "● Executando Auto"; pill.className = "status-pill running";
+        start.disabled = true; pause.disabled = false; stop.disabled = false; stepBtn.disabled = true;
+      } else if (state === "paused") {
+        pill.textContent = "⏸ Pausado"; pill.className = "status-pill paused";
+        start.disabled = false; pause.disabled = true; stop.disabled = false; stepBtn.disabled = false;
+      } else if (state === "manual") {
+        pill.textContent = "🖐 Modo Manual"; pill.className = "status-pill paused";
+        start.disabled = false; pause.disabled = true; stop.disabled = false; stepBtn.disabled = false;
+      } else {
+        pill.textContent = "● Parado"; pill.className = "status-pill";
+        start.disabled = false; pause.disabled = true; stop.disabled = true; stepBtn.disabled = false;
+      }
+    }
+
+    /* ============================================================
+       LOAD SYSTEM
+       ============================================================ */
+    function loadSystem(key) {
+      currentSysKey = key;
+      const sys = projects[key];
+      document.getElementById("sysTitle").textContent = sys.title;
+      document.getElementById("sysDesc").textContent = sys.desc;
+      document.getElementById("pillActiveName").textContent = key.toUpperCase();
+      document.getElementById("booleanExpr").textContent = sys.exprSOP;
+      inputStates = new Array(sys.vars.length).fill(0);
+      corruptedInputs.clear();
+      if (key === "paridade") behavior.paridade.bits = new Array(sys.vars.length).fill(0);
+      renderInputs(); renderTruthTable(); renderKMap(); updateState();
+      log("info", `Sistema carregado: ${key}`);
+      renderAutoSimStats();
+    }
+
+    /* ============================================================
+       TICK (clock)
+       ============================================================ */
+    function tick() {
+      if (!clockRunning) return;
+
+      if (errors.clockJitter && Math.random() < 0.4) {
+        autoSimStats.jitterEvents++;
+        if (!autoSim.running && autoSimStats.jitterEvents % 4 === 0) {
+          log("warn", `🕐 Clock jitter · ${autoSimStats.jitterEvents} ciclos perdidos`);
+          renderAutoSimStats();
+        }
+        return;
+      }
+
+      uptimeSecs++;
+      const m = Math.floor(uptimeSecs / 60).toString().padStart(2, "0");
+      const s = (uptimeSecs % 60).toString().padStart(2, "0");
+      document.getElementById("pillUptime").textContent = `${m}:${s}`;
+
+      if (!autoSim.running) {
+        if (errors.parity && Math.random() < 0.2) {
+          const i = Math.floor(Math.random() * inputStates.length);
+          inputStates[i] ^= 1;
+          corruptedInputs.add(i);
+          log("err", `🔀 PARITY ERROR · bit ${projects[currentSysKey].vars[i]} corrompido`);
+          renderInputs(); updateState();
+        }
+      }
+
+      if (currentSysKey === "semaforo" && behavior.semaforo.auto) {
+        behavior.semaforo.timer++;
+        if (behavior.semaforo.timer >= 3) {
+          behavior.semaforo.timer = 0;
+          const state = (inputStates[0] * 2 + inputStates[1] + 1) % 4;
+          inputStates[0] = (state >> 1) & 1; inputStates[1] = state & 1;
+          renderInputs(); updateState();
+        }
+      }
+
+      if (currentSysKey === "elevador") {
+        const b = behavior.elevador;
+        if (b.queue.length > 0 && !b.doorOpen) {
+          const target = b.queue[0];
+          if (b.floor !== target) {
+            b.floor += target > b.floor ? 1 : -1;
+            renderBehavior();
+            if (b.floor === target) {
+              b.doorOpen = true;
+              setTimeout(() => { b.doorOpen = false; b.queue.shift(); renderBehavior(); }, 2000);
+            }
+          }
+        }
+      }
+
+      if (currentSysKey === "irrigacao") {
+        const b = behavior.irrigacao;
+        const pump = applyGateErrors(projects.irrigacao.fn(...inputStates)) === 1 && b.tank > 0;
+        if (pump) { b.tank = Math.max(0, b.tank - 2); b.moisture = Math.min(100, b.moisture + 4); }
+        else { b.moisture = Math.max(0, b.moisture - 1); if (b.tank < 100 && Math.random() < 0.3) b.tank = Math.min(100, b.tank + 1); }
+        renderBehavior();
+      }
+    }
+
+    /* ============================================================
+       INIT
+       ============================================================ */
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          loadSystem(btn.dataset.tab);
+        });
+      });
+
+      document.querySelectorAll(".error-card").forEach(card => {
+        card.addEventListener("click", (e) => {
+          if (e.target.closest(".gf-btn")) return;
+          const err = card.dataset.error;
+          if (err === "gateFail") {
+            errors.gateFail = errors.gateFail ? null : "AND";
+          } else {
+            errors[err] = !errors[err];
+            if (err === "conversion" && errors.conversion) conversionStuckBit = Math.floor(Math.random() * 4);
+            if (err === "conversion" && !errors.conversion) conversionStuckBit = -1;
+          }
+          log("warn", `Erro "${err}" ${errors[err] || (err === "gateFail" && errors.gateFail) ? "ATIVADO" : "desativado"}`);
+          updateErrorCardsUI();
+          updateState();
+        });
+      });
+
+      document.querySelectorAll(".gf-btn").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          errors.gateFail = errors.gateFail === btn.dataset.gate ? null : btn.dataset.gate;
+          log("warn", `Falha de porta: ${errors.gateFail || "nenhuma"}`);
+          updateErrorCardsUI();
+          updateState();
+        });
+      });
+
+      // ============= AUTO / MANUAL SIM handlers =============
+      document.getElementById("autosimStart").addEventListener("click", () => {
+        autoSim.mode = document.getElementById("autosimMode").value;
+        autoSim.speedMs = parseInt(document.getElementById("autosimSpeed").value);
+        startAutoSim();
+      });
+      document.getElementById("autosimStepBtn").addEventListener("click", manualSimStep);
+      document.getElementById("autosimPause").addEventListener("click", pauseAutoSim);
+      document.getElementById("autosimStop").addEventListener("click", stopAutoSim);
+      document.getElementById("autosimClear").addEventListener("click", () => {
+        autoSim.log = [];
+        document.getElementById("autosimLog").innerHTML = '<div class="line">[limpo] Log reiniciado</div>';
+      });
+      document.getElementById("autosimMode").addEventListener("change", (e) => {
+        autoSim.mode = e.target.value;
+        renderAutoSimStats();
+        if (autoSim.running) autoSimLog("🔄", `Modo alterado para ${autoSim.mode}`);
+      });
+      document.getElementById("autosimSpeed").addEventListener("change", (e) => {
+        autoSim.speedMs = parseInt(e.target.value);
+        if (autoSim.running && !autoSim.paused) {
+          clearInterval(autoSim.timer);
+          autoSim.timer = setInterval(() => autoSimStep(false), autoSim.speedMs);
+        }
+        autoSimLog("⏱", `Velocidade: ${autoSim.speedMs}ms`);
+      });
+      document.querySelectorAll('[data-ae]').forEach(cb => {
+        cb.addEventListener("change", (e) => {
+          autoSim.enabledErrors[e.target.dataset.ae] = e.target.checked;
+        });
+      });
+
+      document.querySelectorAll('[data-alu]').forEach(btn => {
+        btn.addEventListener("click", () => {
+          const op = btn.dataset.alu;
+          if (op === "add1") aluAdd(1);
+          else if (op === "sub1") aluAdd(-1);
+          else if (op === "add15") aluAdd(15);
+          else if (op === "test") aluAutoTest();
+          else if (op === "reset") aluReset();
+        });
+      });
+
+      document.getElementById("btnClockToggle").addEventListener("click", () => {
+        clockRunning = !clockRunning;
+        document.getElementById("btnClockToggle").textContent = clockRunning ? "⏸ Pausar Clock" : "▶ Retomar Clock";
+        document.getElementById("pillClock").className = clockRunning ? "dot ok" : "dot";
+      });
+      document.getElementById("btnResetInputs").addEventListener("click", () => {
+        inputStates = new Array(inputStates.length).fill(0);
+        corruptedInputs.clear();
+        log("warn", "Entradas resetadas");
+        renderInputs(); updateState();
+      });
+      document.getElementById("btnResetAll").addEventListener("click", () => {
+        stopAutoSim();
+        errors.parity = false; errors.conversion = false; errors.overflow = false;
+        errors.gateFail = null; errors.clockJitter = false;
+        conversionStuckBit = -1;
+        inputStates = new Array(inputStates.length).fill(0);
+        corruptedInputs.clear();
+        behavior.alarme.latched = 0;
+        behavior.acesso.doorOpen = false;
+        behavior.irrigacao.tank = 70; behavior.irrigacao.moisture = 60;
+        behavior.semaforo.auto = false; behavior.semaforo.timer = 0;
+        behavior.vendas.saldo = 0; behavior.vendas.stock = { A: 5, B: 5, C: 3 };
+        behavior.elevador.floor = 0; behavior.elevador.queue = []; behavior.elevador.doorOpen = false;
+        aluReset();
+        updateErrorCardsUI();
+        log("ok", "🛑 RESET GERAL");
+        renderInputs(); updateState(); renderAutoSimStats();
+      });
+
+      loadSystem("alarme");
+      aluReset();
+      renderAutoSimStats();
+      setInterval(tick, 1000);
+    });
+
+    /* ============================================================
+     REPORT MODULE v5.1
+     ============================================================ */
+    document.getElementById("autosimReport").addEventListener("click", openReport);
+
+    function computeReportData() {
+      const sys = projects[currentSysKey];
+      const n = sys.vars.length;
+      const total = 1 << n;
+      const coverage = total > 0 ? (autoSimStats.combosSeen.size / total) * 100 : 0;
+      const errRate = autoSimStats.cycles > 0
+        ? (autoSimStats.discrepancies / autoSimStats.cycles) * 100
+        : 0;
+
+      let verdict = "ok", verdictTitle = "✓ Simulação aprovada",
+        verdictMsg = "Nenhuma discrepância significativa detectada.";
+      if (errRate >= 20 || coverage < 50) {
+        verdict = "err";
+        verdictTitle = "✗ Simulação reprovada";
+        verdictMsg = `Taxa de erro ${errRate.toFixed(1)}% · cobertura ${coverage.toFixed(0)}%. Investigar falhas.`;
+      } else if (errRate >= 5 || coverage < 80) {
+        verdict = "warn";
+        verdictTitle = "⚠ Simulação com ressalvas";
+        verdictMsg = `Cobertura ${coverage.toFixed(0)}% · taxa de erro ${errRate.toFixed(1)}%. Recomenda-se mais ciclos.`;
+      }
+
+      const now = new Date();
+      const start = autoSim.sessionStart || now;
+      const end = autoSim.sessionEnd || now;
+      const durationSec = Math.max(0, Math.round((end - start) / 1000));
+
+      return {
+        sys, n, total, coverage, errRate, verdict, verdictTitle, verdictMsg,
+        now, start, end, durationSec
+      };
+    }
+
+    function generateRecommendations(coverage, errRate) {
+      const recs = [];
+      if (coverage < 100)
+        recs.push(`• Aumentar ciclos de sweep para cobrir 100% (atual: ${coverage.toFixed(0)}%)`);
+      if (errRate >= 5)
+        recs.push(`• Investigar discrepâncias spec × implementação (${autoSimStats.discrepancies} encontradas)`);
+      if (errors.overflow)
+        recs.push("• Corrigir bug de CF na ALU (carry/overflow não está sendo sinalizado)");
+      if (autoSimStats.gateFailInjected > autoSimStats.gateFailDetected)
+        recs.push(`• ${autoSimStats.gateFailInjected - autoSimStats.gateFailDetected} falhas de porta não detectadas`);
+      if (autoSimStats.overflowEvents > autoSimStats.overflowDetected)
+        recs.push(`• ${autoSimStats.overflowEvents - autoSimStats.overflowDetected} overflows não sinalizados`);
+      if (recs.length === 0)
+        recs.push("✓ Nenhuma ação corretiva necessária. Simulação saudável.");
+      return recs.join("\n");
+    }
+
+    function openReport() {
+      const r = computeReportData();
+      const body = document.getElementById("reportBody");
+
+      const pct = (a, b) => b > 0 ? ((a / b) * 100).toFixed(0) + "%" : "—";
+      const covClass = r.coverage >= 80 ? "ok" : r.coverage >= 50 ? "warn" : "err";
+      const rateClass = r.errRate >= 20 ? "err" : r.errRate >= 5 ? "warn" : "ok";
+
+      body.innerHTML = `
+    <div class="report-verdict ${r.verdict}">
+      <span class="title">${r.verdictTitle}</span>${r.verdictMsg}
+    </div>
+
+    <div class="report-section">
+      <h3>📅 Informações da Sessão</h3>
+      <table class="report-table">
+        <tr><td>Sistema testado</td><td class="val">${r.sys.title}</td></tr>
+        <tr><td>Variáveis</td><td class="val">${r.sys.vars.join(", ")} (${r.n})</td></tr>
+        <tr><td>Expressão</td><td class="val mono">${r.sys.exprSOP}</td></tr>
+        <tr><td>Início</td><td class="val">${r.start.toLocaleString('pt-BR')}</td></tr>
+        <tr><td>Fim</td><td class="val">${r.end.toLocaleString('pt-BR')}</td></tr>
+        <tr><td>Duração</td><td class="val">${Math.floor(r.durationSec / 60)}m ${r.durationSec % 60}s</td></tr>
+        <tr><td>Modo</td><td class="val">${autoSim.mode}</td></tr>
+        <tr><td>Velocidade</td><td class="val">${autoSim.speedMs} ms/ciclo</td></tr>
+      </table>
+    </div>
+
+    <div class="report-section">
+      <h3>📊 Cobertura</h3>
+      <div class="report-kpi-grid">
+        <div class="report-kpi"><div class="lbl">Ciclos</div><div class="val info">${autoSimStats.cycles}</div></div>
+        <div class="report-kpi"><div class="lbl">Cobertura</div><div class="val ${covClass}">${r.coverage.toFixed(0)}%</div></div>
+        <div class="report-kpi"><div class="lbl">Combinações</div><div class="val">${autoSimStats.combosSeen.size}/${r.total}</div></div>
+        <div class="report-kpi"><div class="lbl">Sweeps</div><div class="val">${autoSimStats.sweeps}</div></div>
+      </div>
+    </div>
+
+    <div class="report-section">
+      <h3>⚠ Injeção de Erros · Detecção</h3>
+      <table class="report-table">
+        <thead><tr><th>Tipo</th><th>Injetados</th><th>Detectados</th><th>Taxa</th></tr></thead>
+        <tbody>
+          <tr><td>🔀 Paridade</td>
+            <td class="val">${autoSimStats.parityInjected}</td>
+            <td class="val">${autoSimStats.parityDetected}</td>
+            <td class="val ok">${pct(autoSimStats.parityDetected, autoSimStats.parityInjected)}</td></tr>
+          <tr><td>📈 Overflow</td>
+            <td class="val">${autoSimStats.overflowEvents}</td>
+            <td class="val">${autoSimStats.overflowDetected}</td>
+            <td class="val ${autoSimStats.overflowDetected < autoSimStats.overflowEvents ? 'err' : 'ok'}">${pct(autoSimStats.overflowDetected, autoSimStats.overflowEvents)}</td></tr>
+          <tr><td>⚡ Gate Fail</td>
+            <td class="val">${autoSimStats.gateFailInjected}</td>
+            <td class="val">${autoSimStats.gateFailDetected}</td>
+            <td class="val ok">${pct(autoSimStats.gateFailDetected, autoSimStats.gateFailInjected)}</td></tr>
+          <tr><td>🕐 Jitter</td>
+            <td class="val">${autoSimStats.jitterEvents}</td>
+            <td class="val">—</td>
+            <td class="val">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="report-section">
+      <h3>🎯 Discrepâncias (spec × real)</h3>
+      <div class="report-kpi-grid">
+        <div class="report-kpi"><div class="lbl">Total</div><div class="val ${autoSimStats.discrepancies > 0 ? 'err' : 'ok'}">${autoSimStats.discrepancies}</div></div>
+        <div class="report-kpi"><div class="lbl">Taxa de erro</div><div class="val ${rateClass}">${r.errRate.toFixed(1)}%</div></div>
+        <div class="report-kpi"><div class="lbl">Ciclos OK</div><div class="val ok">${Math.max(0, autoSimStats.cycles - autoSimStats.discrepancies)}</div></div>
+      </div>
+    </div>
+
+    <div class="report-section">
+      <h3>🧮 ALU Bench</h3>
+      <table class="report-table">
+        <tr><td>ACC</td><td class="val">0x${alu.acc.toString(16).toUpperCase().padStart(2, '0')} (${alu.acc})</td></tr>
+        <tr><td>CF (carry)</td><td class="val ${alu.cf ? 'ok' : 'warn'}">${alu.cf}</td></tr>
+        <tr><td>VF (overflow)</td><td class="val ${alu.vf ? 'warn' : 'ok'}">${alu.vf}</td></tr>
+        <tr><td>CF operacional</td><td class="val ${errors.overflow ? 'err' : 'ok'}">${errors.overflow ? 'NÃO · bug ativo' : 'SIM'}</td></tr>
+      </table>
+    </div>
+
+    <div class="report-section">
+      <h3>📟 Últimos eventos</h3>
+      <div class="report-pre">${autoSim.log.length > 0 ? autoSim.log.join("\n") : "[nenhum evento registrado]"}</div>
+    </div>
+
+    <div class="report-section">
+      <h3>📋 Recomendações</h3>
+      <div class="report-pre">${generateRecommendations(r.coverage, r.errRate)}</div>
+    </div>
+  `;
+
+      document.getElementById("reportModal").style.display = "flex";
+    }
+
+    function closeReport() {
+      document.getElementById("reportModal").style.display = "none";
+    }
+
+    function generateTextReport() {
+      const r = computeReportData();
+      const pct = (a, b) => b > 0 ? ((a / b) * 100).toFixed(0) + "%" : "—";
+      return `═══════════════════════════════════════════════════════
+   RELATÓRIO FINAL DE SIMULAÇÃO
+   Simulador de Sistemas Digitais v5.1
+═══════════════════════════════════════════════════════
+
+[VEREDITO] ${r.verdictTitle}
+${r.verdictMsg}
+
+─── INFORMAÇÕES DA SESSÃO ───
+Sistema:      ${r.sys.title}
+Variáveis:    ${r.sys.vars.join(", ")} (${r.n})
+Expressão:    ${r.sys.exprSOP}
+Início:       ${r.start.toLocaleString('pt-BR')}
+Fim:          ${r.end.toLocaleString('pt-BR')}
+Duração:      ${Math.floor(r.durationSec / 60)}m ${r.durationSec % 60}s
+Modo:         ${autoSim.mode}
+Velocidade:   ${autoSim.speedMs} ms/ciclo
+
+─── COBERTURA ───
+Ciclos:       ${autoSimStats.cycles}
+Cobertura:    ${r.coverage.toFixed(1)}% (${autoSimStats.combosSeen.size}/${r.total})
+Sweeps:       ${autoSimStats.sweeps}
+
+─── DISCREPÂNCIAS ───
+Total:        ${autoSimStats.discrepancies}
+Taxa de erro: ${r.errRate.toFixed(2)}%
+Ciclos OK:    ${Math.max(0, autoSimStats.cycles - autoSimStats.discrepancies)}
+
+─── DETECÇÃO DE ERROS ───
+Paridade:     ${autoSimStats.parityInjected} injetados · ${autoSimStats.parityDetected} detectados (${pct(autoSimStats.parityDetected, autoSimStats.parityInjected)})
+Overflow:     ${autoSimStats.overflowEvents} eventos · ${autoSimStats.overflowDetected} sinalizados (${pct(autoSimStats.overflowDetected, autoSimStats.overflowEvents)})
+Gate Fail:    ${autoSimStats.gateFailInjected} injetados · ${autoSimStats.gateFailDetected} detectados (${pct(autoSimStats.gateFailDetected, autoSimStats.gateFailInjected)})
+Jitter:       ${autoSimStats.jitterEvents} ciclos perdidos
+
+─── ALU BENCH ───
+ACC:          0x${alu.acc.toString(16).toUpperCase().padStart(2, '0')} (${alu.acc})
+CF:           ${alu.cf}
+VF:           ${alu.vf}
+CF status:    ${errors.overflow ? "BUG ATIVO (CF nunca seta)" : "OPERACIONAL"}
+
+─── RECOMENDAÇÕES ───
+${generateRecommendations(r.coverage, r.errRate)}
+
+═══════════════════════════════════════════════════════
+Gerado em: ${r.now.toLocaleString('pt-BR')}
+═══════════════════════════════════════════════════════
+`;
+    }
+
+    function copyReport() {
+      navigator.clipboard.writeText(generateTextReport())
+        .then(() => { log("ok", "📋 Relatório copiado"); alert("Relatório copiado para a área de transferência!"); })
+        .catch(() => alert("Falha ao copiar — use o botão Baixar .txt"));
+    }
+
+    function downloadReportTxt() {
+      const blob = new Blob([generateTextReport()], { type: "text/plain;charset=utf-8" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `relatorio-${currentSysKey}-${Date.now()}.txt`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+      log("ok", "💾 Relatório .txt baixado");
+    }
+
+    function downloadReportJson() {
+      const r = computeReportData();
+      const data = {
+        generatedAt: r.now.toISOString(),
+        session: { start: r.start.toISOString(), end: r.end.toISOString(), durationSec: r.durationSec },
+        system: currentSysKey, systemTitle: r.sys.title,
+        variables: r.sys.vars, expression: r.sys.exprSOP,
+        mode: autoSim.mode, speedMs: autoSim.speedMs,
+        verdict: r.verdict, verdictTitle: r.verdictTitle,
+        stats: {
+          cycles: autoSimStats.cycles,
+          coverage: { covered: autoSimStats.combosSeen.size, total: r.total, pct: r.coverage },
+          discrepancies: autoSimStats.discrepancies, errorRate: r.errRate,
+          parity: { injected: autoSimStats.parityInjected, detected: autoSimStats.parityDetected },
+          overflow: { events: autoSimStats.overflowEvents, detected: autoSimStats.overflowDetected },
+          gateFail: { injected: autoSimStats.gateFailInjected, detected: autoSimStats.gateFailDetected },
+          jitter: { events: autoSimStats.jitterEvents }
+        },
+        alu: { acc: alu.acc, cf: alu.cf, vf: alu.vf, cfBugActive: errors.overflow },
+        recentEvents: autoSim.log
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `relatorio-${currentSysKey}-${Date.now()}.json`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+      log("ok", "📊 Relatório JSON baixado");
+    }
+
+    function printReport() {
+      const txt = generateTextReport();
+      const w = window.open("", "_blank");
+      w.document.write(`<!doctype html><html><head><title>Relatório de Simulação</title>
+    <style>body{font-family:'Courier New',monospace;padding:36px;font-size:11.5px;line-height:1.5}
+    pre{white-space:pre-wrap;word-wrap:break-word}</style></head>
+    <body><pre>${txt.replace(/</g, "&lt;")}</pre></body></html>`);
+      w.document.close();
+      setTimeout(() => w.print(), 250);
+    }
+  </script>
+</body>
+
+</html>
